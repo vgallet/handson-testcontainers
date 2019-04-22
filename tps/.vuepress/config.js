@@ -14,7 +14,8 @@ module.exports = {
         // if your docs are not at the root of the repo:
         docsDir: 'tps',
         sidebar: [
-            '/GETTING_STARTED'
+            '/GETTING_STARTED',
+            '/CLINIC_TESTS'
         ]
     }
 };
