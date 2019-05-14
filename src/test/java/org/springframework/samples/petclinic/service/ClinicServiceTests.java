@@ -16,28 +16,37 @@
 
 package org.springframework.samples.petclinic.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.time.LocalDate;
-import java.util.Collection;
-
-import org.junit.Test;
+import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.api.model.Ports;
+import org.assertj.core.util.Lists;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.samples.petclinic.owner.Owner;
-import org.springframework.samples.petclinic.owner.OwnerRepository;
-import org.springframework.samples.petclinic.owner.Pet;
-import org.springframework.samples.petclinic.owner.PetRepository;
-import org.springframework.samples.petclinic.owner.PetType;
+import org.springframework.samples.petclinic.owner.*;
 import org.springframework.samples.petclinic.vet.Vet;
 import org.springframework.samples.petclinic.vet.VetRepository;
 import org.springframework.samples.petclinic.visit.Visit;
 import org.springframework.samples.petclinic.visit.VisitRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.images.builder.ImageFromDockerfile;
+import org.testcontainers.utility.MountableFile;
+
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.function.Consumer;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Integration test of the Service and the Repository layer.
@@ -60,163 +69,68 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Dave Syer
  */
 
-@RunWith(SpringRunner.class)
-@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
+//@RunWith(SpringRunner.class)
+//@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
+//@TestPropertySource(locations="classpath:application-test.properties")
+//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class ClinicServiceTests {
 
-    @Autowired
-    protected OwnerRepository owners;
+    private static GenericContainer genericContainer;
 
-    @Autowired
-    protected PetRepository pets;
+//    @ClassRule
+//    public static GenericContainer mysql = new GenericContainer("mysql-petclinic")
+//        .withExposedPorts(3306)
+//        .waitingFor(Wait.forListeningPort())
+//        .withCreateContainerCmdModifier(
+//            new Consumer<CreateContainerCmd>() {
+//                @Override
+//                public void accept(CreateContainerCmd createContainerCmd) {
+//                    createContainerCmd.withPortBindings(
+//                        new PortBinding(Ports.Binding.bindPort(3306), new ExposedPort(3306))
+//                    );
+//                }
+//        });
 
-    @Autowired
-    protected VisitRepository visits;
+//    @BeforeClass
+//    public static void setUp() {
+//        genericContainer = new GenericContainer("mysql-petclinic");
+//        genericContainer.setExposedPorts(Lists.newArrayList(3306));
+//        genericContainer.setPortBindings(Lists.newArrayList("3306:3306"));
+//        genericContainer.waitingFor(Wait.forListeningPort());
+//
+//        genericContainer.start();
+//    }
+//
+//    @AfterClass
+//    public static void tearDown() throws Exception {
+//        genericContainer.stop();
+//    }
 
-    @Autowired
-    protected VetRepository vets;
+    //    @ClassRule
+//    public static GenericContainer mysql = new GenericContainer(new ImageFromDockerfile("mysql-petclinic")
+//        .withDockerfileFromBuilder(dockerfileBuilder -> {
+//            dockerfileBuilder.from("mysql:5.7.8")
+//                .env("MYSQL_ROOT_PASSWORD", "root_password")
+//                .env("MYSQL_DATABASE", "petclinic")
+//                .env("MYSQL_USER", "petclinic")
+//                .env("MYSQL_PASSWORD", "petclinic")
+//                .add("a_schema.sql", "/docker-entrypoint-initdb.d")
+//                .add("b_data.sql", "/docker-entrypoint-initdb.d");
+//        })
+//        .withFileFromClasspath("a_schema.sql", "db/mysql/schema.sql")
+//        .withFileFromClasspath("b_data.sql", "db/mysql/data.sql"))
+//        .withExposedPorts(3306)
+//        .withCreateContainerCmdModifier(
+//            new Consumer<CreateContainerCmd>() {
+//                @Override
+//                public void accept(CreateContainerCmd createContainerCmd) {
+//                    createContainerCmd.withPortBindings(new PortBinding(Ports.Binding.bindPort(3306), new ExposedPort(3306)));
+//                }
+//            }
+//        )
+//        .waitingFor(Wait.forListeningPort());
 
-    @Test
-    public void shouldFindOwnersByLastName() {
-        Collection<Owner> owners = this.owners.findByLastName("Davis");
-        assertThat(owners.size()).isEqualTo(2);
 
-        owners = this.owners.findByLastName("Daviss");
-        assertThat(owners.isEmpty()).isTrue();
-    }
 
-    @Test
-    public void shouldFindSingleOwnerWithPet() {
-        Owner owner = this.owners.findById(1);
-        assertThat(owner.getLastName()).startsWith("Franklin");
-        assertThat(owner.getPets().size()).isEqualTo(1);
-        assertThat(owner.getPets().get(0).getType()).isNotNull();
-        assertThat(owner.getPets().get(0).getType().getName()).isEqualTo("cat");
-    }
-
-    @Test
-    @Transactional
-    public void shouldInsertOwner() {
-        Collection<Owner> owners = this.owners.findByLastName("Schultz");
-        int found = owners.size();
-
-        Owner owner = new Owner();
-        owner.setFirstName("Sam");
-        owner.setLastName("Schultz");
-        owner.setAddress("4, Evans Street");
-        owner.setCity("Wollongong");
-        owner.setTelephone("4444444444");
-        this.owners.save(owner);
-        assertThat(owner.getId().longValue()).isNotEqualTo(0);
-
-        owners = this.owners.findByLastName("Schultz");
-        assertThat(owners.size()).isEqualTo(found + 1);
-    }
-
-    @Test
-    @Transactional
-    public void shouldUpdateOwner() {
-        Owner owner = this.owners.findById(1);
-        String oldLastName = owner.getLastName();
-        String newLastName = oldLastName + "X";
-
-        owner.setLastName(newLastName);
-        this.owners.save(owner);
-
-        // retrieving new name from database
-        owner = this.owners.findById(1);
-        assertThat(owner.getLastName()).isEqualTo(newLastName);
-    }
-
-    @Test
-    public void shouldFindPetWithCorrectId() {
-        Pet pet7 = this.pets.findById(7);
-        assertThat(pet7.getName()).startsWith("Samantha");
-        assertThat(pet7.getOwner().getFirstName()).isEqualTo("Jean");
-
-    }
-
-    @Test
-    public void shouldFindAllPetTypes() {
-        Collection<PetType> petTypes = this.pets.findPetTypes();
-
-        PetType petType1 = EntityUtils.getById(petTypes, PetType.class, 1);
-        assertThat(petType1.getName()).isEqualTo("cat");
-        PetType petType4 = EntityUtils.getById(petTypes, PetType.class, 4);
-        assertThat(petType4.getName()).isEqualTo("snake");
-    }
-
-    @Test
-    @Transactional
-    public void shouldInsertPetIntoDatabaseAndGenerateId() {
-        Owner owner6 = this.owners.findById(6);
-        int found = owner6.getPets().size();
-
-        Pet pet = new Pet();
-        pet.setName("bowser");
-        Collection<PetType> types = this.pets.findPetTypes();
-        pet.setType(EntityUtils.getById(types, PetType.class, 2));
-        pet.setBirthDate(LocalDate.now());
-        owner6.addPet(pet);
-        assertThat(owner6.getPets().size()).isEqualTo(found + 1);
-
-        this.pets.save(pet);
-        this.owners.save(owner6);
-
-        owner6 = this.owners.findById(6);
-        assertThat(owner6.getPets().size()).isEqualTo(found + 1);
-        // checks that id has been generated
-        assertThat(pet.getId()).isNotNull();
-    }
-
-    @Test
-    @Transactional
-    public void shouldUpdatePetName() throws Exception {
-        Pet pet7 = this.pets.findById(7);
-        String oldName = pet7.getName();
-
-        String newName = oldName + "X";
-        pet7.setName(newName);
-        this.pets.save(pet7);
-
-        pet7 = this.pets.findById(7);
-        assertThat(pet7.getName()).isEqualTo(newName);
-    }
-
-    @Test
-    public void shouldFindVets() {
-        Collection<Vet> vets = this.vets.findAll();
-
-        Vet vet = EntityUtils.getById(vets, Vet.class, 3);
-        assertThat(vet.getLastName()).isEqualTo("Douglas");
-        assertThat(vet.getNrOfSpecialties()).isEqualTo(2);
-        assertThat(vet.getSpecialties().get(0).getName()).isEqualTo("dentistry");
-        assertThat(vet.getSpecialties().get(1).getName()).isEqualTo("surgery");
-    }
-
-    @Test
-    @Transactional
-    public void shouldAddNewVisitForPet() {
-        Pet pet7 = this.pets.findById(7);
-        int found = pet7.getVisits().size();
-        Visit visit = new Visit();
-        pet7.addVisit(visit);
-        visit.setDescription("test");
-        this.visits.save(visit);
-        this.pets.save(pet7);
-
-        pet7 = this.pets.findById(7);
-        assertThat(pet7.getVisits().size()).isEqualTo(found + 1);
-        assertThat(visit.getId()).isNotNull();
-    }
-
-    @Test
-    public void shouldFindVisitsByPetId() throws Exception {
-        Collection<Visit> visits = this.visits.findByPetId(7);
-        assertThat(visits.size()).isEqualTo(2);
-        Visit[] visitArr = visits.toArray(new Visit[visits.size()]);
-        assertThat(visitArr[0].getDate()).isNotNull();
-        assertThat(visitArr[0].getPetId()).isEqualTo(7);
-    }
 
 }

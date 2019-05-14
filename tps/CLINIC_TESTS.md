@@ -20,14 +20,15 @@ Un exemple de cette utilisation se trouve par exemple dans la classe `OwnerRepos
 Collection<Owner> findByLastName(@Param("lastName") String lastName);
 ```
 
-Ces méthodes de requêtages sont testées dans la classe de test `ClinicServiceTests`.
+Ces méthodes de requêtages sont testées dans les classe de tests se terminant par `*RepositoryTests`. Par exemple `PetRepositoryTests`.
 
 ## Les Tests
 
-Pour bien démarrer, vous pouvez lancer la classe de test et mesurez le temps d'exécution.
+Pour bien démarrer, vous pouvez lancer la suite de test et mesurez le temps d'exécution.
 
 Notez que les tests utilisent par défaut la configuration de l'application. 
-Dans ce cas, il s'agit de `src/main/resouces/application.properties`. Il s'agit donc de la configuration de la base suivante :
+
+Dans ce cas, il s'agit de `src/main/resouces/application.properties`. Il s'agit de la configuration de la base suivante :
 
 ```
 # database init, supports mysql too
@@ -47,7 +48,9 @@ Afin de commencer la migration vers des tests utilisant une base de données MyS
 </dependency>
 ```
 
-Ensuite, il vous faut modifier la configuration à la base pour les tests. Pour ce faire, vous pouvez créer un fichier `application-test.properties` dans le dossier `src/test/resources` avec les informations suivantes :
+Ensuite, il vous faut modifier la configuration à la base pour les tests. Cette dernière se trouve dans la classe `AbstractIntegrationTests` et est commune à tous les tests nécessitant un accès à la ase de données.
+
+Pour ce faire, vous pouvez créer un fichier `application-test.properties` dans le dossier `src/test/resources` avec les informations suivantes :
 
 ```
 spring.datasource.url=jdbc:mysql://localhost/petclinic
@@ -57,6 +60,7 @@ spring.datasource.driver-class-name=com.mysql.jdbc.Driver
 ```
 
 Pour charger cette nouvelle configuration pour notre classe de tests, vous pouvez ensuite utiliser l'annotation `@TestPropertySource`. 
+
 Par ailleurs, Spring va par défaut créer une base de données en mémoire pour les tests. Vous pouvez surcharger ce comportement en utilisant l'annotation `@AutoConfigureTestDatabase`
 
 
@@ -65,7 +69,11 @@ Par ailleurs, Spring va par défaut créer une base de données en mémoire pour
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @TestPropertySource(locations="classpath:application-test.properties")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class ClinicServiceTests {
+public class AbstractIntegrationTests {
 ...
 }
 ```
+
+
+
+
