@@ -22,7 +22,7 @@ Il s'agit maintenant d'utiliser votre image docker pour les tests de la classe `
 
 En utilisant les annotations JUnit `@BeforeClass` et `AfterClass`, vous pouvez créer votre container avec la classe `GenericContainer` et ainsi avoir une base de données mysql initialisée pour les tests.
 
-Pour fonctionner, votre container doit donc exposer le port 3306 et il faut également indiquer à `testcontainers` à quel momenet le container est prêt à être utilisé.
+Pour fonctionner, votre container doit donc exposer le port 3306 et il faut également indiquer à `testcontainers` à quel moment le container est prêt à être utilisé.
 
 
 Une fois les tests lancés, en exécutant la commande `docker ps`, que constatez-vous ?
