@@ -15,8 +15,8 @@ module.exports = {
         docsDir: 'tps',
         sidebar: [
             '/GETTING_STARTED',
-            '/CLINIC_TESTS',
-            '/GENERIC_CONTAINER'
+            '/ARCHITECTURE',
+            '/MYSQL_CONTAINER'
         ]
     }
 };

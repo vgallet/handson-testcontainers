@@ -27,6 +27,9 @@ Pour fonctionner, votre container doit donc exposer le port 3306 et il faut éga
 
 Une fois les tests lancés, en exécutant la commande `docker ps`, que constatez-vous ?
 
+Comment testcontainers s'assure que le container est correctement démarré ?
+
+Si vous arrêtez vos tests en cours d'exécution, est-ce que votre container est toujours vivant ?
  
 
 ## Cycle de vie automatique
@@ -53,14 +56,14 @@ pour pouvoir utiliser les extensions testcontainers.
 :::
 
 ::: tip
-Vous risquez de devoir faire appel à la méthode `withCreateContainerCmdModifier` qui permet de modifier les paramètres de création du container. ``
+Vous risquez de devoir faire appel à la méthode `withCreateContainerCmdModifier` qui permet de modifier les paramètres de création du container.
 :::
 
 ## Singleton Container
 
 En utilisant l'annotation `@ClassRule`, un container est démarré pour chacune des classes de tests. Ce n'est pas vraiment optimal et il est possible de faire en sorte que le container ne soit démarré qu'une fois pour l'ensemble de la suite de tests.
 
-Utilisez une fonctionnalité du langage java vous permettra d'avoir un singleton et donc qu'une seule instance. 
+Utilisez une fonctionnalité du langage java pour avoir un singleton et donc qu'une seule instance. 
 
 Une fois le singleton mis en place, relancez la suite de tests et mesurez le temps d'exécution. Que constatez-vous ?
 
