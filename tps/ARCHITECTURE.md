@@ -9,7 +9,7 @@ Les classes se terminant par `*Controller` sont les endpoints HTTP exposant des 
 
 On retrouve par exemple les classes `PetController`, `OwnerController`, `VetController`, etc. 
 
-Ces derniers font appel à la couche DAO qui est en charge de communiquer avec la base de données.
+Ces derniers font appel à la couche DAO qui est responsable de communiquer avec la base de données.
 
 La couche DAO est ici représentée par les interfaces `Repository`. Ce sont des interfaces car c'est le composant Spring Data qui fournira l'implémentation au runtime. 
 
@@ -51,7 +51,7 @@ Afin de commencer la migration vers des tests utilisant une base de données MyS
 </dependency>
 ```
 
-Ensuite, il vous faut modifier la configuration à la base pour les tests. Cette dernière se trouve dans la classe `AbstractIntegrationTests` et est commune à tous les tests nécessitant un accès à la ase de données.
+Ensuite, il vous faut modifier la configuration à la base pour les tests. Cette dernière se trouve dans la classe `AbstractIntegrationTests` et est commune à tous les tests nécessitant un accès à la base de données.
 
 Pour ce faire, vous pouvez créer un fichier `application-test.properties` dans le dossier `src/test/resources` avec les informations suivantes :
 
@@ -64,7 +64,9 @@ spring.datasource.driver-class-name=com.mysql.jdbc.Driver
 
 Vous devez faire en sorte de charger ce fichier de configuration pour les classes de tests.
 
-Par ailleurs, l'annotation `@DataJpaTest` se charge de créer tout le nécessaire pour avoir un context de test opérationnel. C'est à dire qu'il va notamment crée une base de données en mémoire.
+Par ailleurs, l'annotation `@DataJpaTest` se charge de créer tout le nécessaire pour avoir un contexte de test opérationnel. 
+
+C'est-à-dire qu'il va notamment crée une base de données en mémoire.
 
 Vous devez faire en sorte de surcharger ce comportement pour ne pas voir de base de données en mémoire.
 
