@@ -14,9 +14,9 @@ module.exports = {
         // if your docs are not at the root of the repo:
         docsDir: 'tps',
         sidebar: [
-            '/GETTING_STARTED',
-            '/ARCHITECTURE',
-            '/MYSQL_CONTAINER'
+            '/1_GETTING_STARTED',
+            '/2_ARCHITECTURE',
+            '/3_MYSQL_CONTAINER'
         ]
     }
 };

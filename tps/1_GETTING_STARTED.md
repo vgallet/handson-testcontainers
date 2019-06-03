@@ -31,6 +31,13 @@ Ouvrez le projet dans votre IDE et assurez-vous que celui-ci build :
 mvn clean package
 ```
 
+::: tip
+Le projet utilise du css compilé depuis des fichiers less. Si le css de l'application ne s'affiche pas correctement. Recompiler le css avec la commande :
+```
+mvn generate-resources
+```
+:::
+
 Vous pouvez ensuite démarrer l'application en lançant le `main` de la classe `PetClinicApplication.java` où en démarrant directement le jar crée précédemment.
 
 ```bash
@@ -49,4 +56,4 @@ spring.datasource.schema=classpath*:db/${database}/schema.sql
 spring.datasource.data=classpath*:db/${database}/data.sql
 ```
 
-Ce type de base données est généralement utilisée pour les tests automatisés et c'est que nous allons changer grâce à testcontainers.
+Ce type de base données est généralement utilisée pour les tests automatisés et c'est ce que nous allons changer grâce à testcontainers.
