@@ -2,7 +2,7 @@ package org.springframework.samples.petclinic.pet;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.petclinic.AbstractIntegrationTests;
+import org.springframework.samples.petclinic.AbstractRepositoryTests;
 import org.springframework.samples.petclinic.owner.*;
 import org.springframework.samples.petclinic.service.EntityUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +12,7 @@ import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PetRepositoryTests extends AbstractIntegrationTests {
+public class PetRepositoryTests extends AbstractRepositoryTests {
 
     @Autowired
     protected OwnerRepository owners;

@@ -2,14 +2,14 @@ package org.springframework.samples.petclinic.vet;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.petclinic.AbstractIntegrationTests;
+import org.springframework.samples.petclinic.AbstractRepositoryTests;
 import org.springframework.samples.petclinic.service.EntityUtils;
 
 import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class VetRepositoryTests extends AbstractIntegrationTests {
+public class VetRepositoryTests extends AbstractRepositoryTests {
 
     @Autowired
     protected VetRepository vets;
