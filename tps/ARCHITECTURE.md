@@ -8,10 +8,13 @@ L'application Spring PetClinic est une application spring boot classique avec un
 Les classes se terminant par `*Controller` sont les endpoints HTTP exposant des services permettant de manipuler les entités.
 
 On retrouve par exemple les classes `PetController`, `OwnerController`, `VetController`, etc. 
-Ces derniers font appel à la couche DAO qui est en charge de communiquer avec la base de données.
+
+Ces derniers font appel à la couche DAO qui est responsable de communiquer avec la base de données.
 
 La couche DAO est ici représentée par les interfaces `Repository`. Ce sont des interfaces car c'est le composant Spring Data qui fournira l'implémentation au runtime. 
+
 Pour ce faire, les interfaces doivent étendre l'interface `org.springframework.data.repository.Repository` . Par contre, il est également possible d'ajouter ces propres méthodes d'accès à la base de données grâce à l'annotation `@Query`.
+
 Un exemple de cette utilisation se trouve par exemple dans la classe `OwnerRepository` :
 
 ```java
@@ -28,7 +31,7 @@ Pour bien démarrer, vous pouvez lancer la suite de test et mesurez le temps d'e
 
 Notez que les tests utilisent par défaut la configuration de l'application. 
 
-Dans ce cas, il s'agit de `src/main/resouces/application.properties`. Il s'agit de la configuration de la base suivante :
+Dans ce cas, il s'agit de `src/main/resouces/application.properties`. La configuration de la base est la suivante :
 
 ```
 # database init, supports mysql too
@@ -59,21 +62,20 @@ spring.datasource.password=petclinic
 spring.datasource.driver-class-name=com.mysql.jdbc.Driver
 ```
 
-Pour charger cette nouvelle configuration pour notre classe de tests, vous pouvez ensuite utiliser l'annotation `@TestPropertySource`. 
+Vous devez faire en sorte de charger ce fichier de configuration pour les classes de tests.
 
-Par ailleurs, Spring va par défaut créer une base de données en mémoire pour les tests. Vous pouvez surcharger ce comportement en utilisant l'annotation `@AutoConfigureTestDatabase`
+Par ailleurs, l'annotation `@DataJpaTest` se charge de créer tout le nécessaire pour avoir un contexte de test opérationnel. 
 
+C'est-à-dire qu'il va notamment crée une base de données en mémoire.
 
-```java
-@RunWith(SpringRunner.class)
-@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@TestPropertySource(locations="classpath:application-test.properties")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class AbstractIntegrationTests {
-...
-}
-```
+Vous devez faire en sorte de surcharger ce comportement pour ne pas voir de base de données en mémoire.
 
+Lancez les tests! S'ils plantent avec une belle exception
 
+::: danger Connexion refusée
+Caused by: java.net.ConnectException: Connexion refusée (Connection refused)
+:::
+
+c'est que la base de données en mémoire a bien été désactivé. 
 
 

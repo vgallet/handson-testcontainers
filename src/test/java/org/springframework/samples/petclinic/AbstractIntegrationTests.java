@@ -1,6 +1,11 @@
 package org.springframework.samples.petclinic;
 
+import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.api.model.Ports;
 import org.assertj.core.util.Lists;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -11,10 +16,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
+import java.util.function.Consumer;
+
 @RunWith(SpringRunner.class)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-//@TestPropertySource(locations="classpath:application-test.properties")
-//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestPropertySource(locations="classpath:application-test.properties")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public abstract class AbstractIntegrationTests {
 
     private static GenericContainer genericContainer;
@@ -28,8 +35,8 @@ public abstract class AbstractIntegrationTests {
 //        genericContainer.start();
 //    }
 
-//    @ClassRule
-//    public static GenericContainer mysql = new GenericContainer("mysql-petclinic")
+//    @Rule
+//    public GenericContainer mysql = new GenericContainer("mysql-petclinic")
 //        .withExposedPorts(3306)
 //        .waitingFor(Wait.forListeningPort())
 //        .withCreateContainerCmdModifier(
