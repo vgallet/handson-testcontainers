@@ -106,12 +106,36 @@ Pour utiliser la nouvelle datasource vous suffit d'ajouter l'annotation suivante
 @TestPropertySource(locations="classpath:application-test.properties")
 ```
 
+Par ailleurs, l'annotation `@DataJpaTest` de la dépendance spring boot test se charge de créer tout le nécessaire pour avoir un contexte de test unitaire opérationnel. 
+C'est-à-dire qu'elle va notamment crée une base de données en mémoire (cf : ligne 12 ci-dessous).
 
-Par ailleurs, l'annotation `@DataJpaTest` se charge de créer tout le nécessaire pour avoir un contexte de test opérationnel. 
+```java{12}
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+@BootstrapWith(DataJpaTestContextBootstrapper.class)
+@ExtendWith(SpringExtension.class)
+@OverrideAutoConfiguration(enabled = false)
+@TypeExcludeFilters(DataJpaTypeExcludeFilter.class)
+@Transactional
+@AutoConfigureCache
+@AutoConfigureDataJpa
+@AutoConfigureTestDatabase
+@AutoConfigureTestEntityManager
+@ImportAutoConfiguration
+public @interface DataJpaTest {
+    // ... TRUNCATED ...
+}
+```
 
-C'est-à-dire qu'il va notamment crée une base de données en mémoire.
+Vous devez donc faire en sorte de surcharger ce comportement pour ne pas avoir de base de données en mémoire. Pour cela ajouter l'annotation suivante :  
 
-Vous devez faire en sorte de surcharger ce comportement pour ne pas voir de base de données en mémoire.
+```java
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+```
+  
+> Cette annotation permet de dire à spring boot test de ne surcharger aucune data source lors des tests
 
 ### Ajout de la première version de GenericContainer
 
