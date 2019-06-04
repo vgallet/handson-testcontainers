@@ -25,7 +25,12 @@ Collection<Owner> findByLastName(@Param("lastName") String lastName);
 
 Ces méthodes de requêtages sont testées dans les classe de tests se terminant par `*RepositoryTests`. Par exemple `PetRepositoryTests`.
 
-## Les Tests
+## Tests initiaux
+
+Actuellement l'ensemble des tests `*RepositoryTests` étendent une classe commune nommée `AbstractRepositoryTest`.  
+  
+Cette classe permet un chargement allégé du context spring 
+avec uniquement les interfaces des repositories et la base de donnée Inmemory par défaut fournit par springBootTest.
 
 Pour bien démarrer, vous pouvez lancer la suite de test et mesurez le temps d'exécution.
 
@@ -40,7 +45,23 @@ spring.datasource.schema=classpath*:db/${database}/schema.sql
 spring.datasource.data=classpath*:db/${database}/data.sql
 ```
 
-Afin de commencer la migration vers des tests utilisant une base de données MySQL, il vous faut ajouter la dépendance vers `testcontainers`.
+## Amélioration des Tests
+
+> L'objectif de cette partie est d'utiliser une base de donnée similaire à celle utilisée en production par l'application.  
+> Pour cet atelier nous allons utiliser le SGBD MYSQL.
+
+Afin de commencer la migration vers des tests utilisant une base de données MySQL, il vous faut tout d'abord ajouter la dépendance vers le driver mysql :  
+
+```xml
+<dependency>
+  <groupId>mysql</groupId>
+  <artifactId>mysql-connector-java</artifactId>
+  <scope>runtime</scope>
+</dependency>
+``` 
+
+Puis dans un second temps afin de prévoir l'interopérabilité avec testcontainer il faut ajouter la librairie `org.testcontainers:testcontainers`  
+ainsi que la libraire `org.testcontainers:mysql` qui permet d'avoir une pré-packagé d'un conteneur mysql.
 
 ```xml
 <dependency>
@@ -49,9 +70,21 @@ Afin de commencer la migration vers des tests utilisant une base de données MyS
     <version>1.11.2</version>
     <scope>test</scope>
 </dependency>
+<dependency>
+  <groupId>org.testcontainers</groupId>
+  <artifactId>mysql</artifactId>
+  <version>1.11.2</version>
+  <scope>test</scope>
+</dependency>
 ```
 
-Ensuite, il vous faut modifier la configuration à la base pour les tests. Cette dernière se trouve dans la classe `AbstractIntegrationTests` et est commune à tous les tests nécessitant un accès à la base de données.
+Ensuite il vous faut modifier la configuration pour utiliser la nouvelle base de donnée. Ceci ce déroule en trois étapes :  
+
+* Modification des properties de configuration de la datasource de l'application
+* Modification de la classe commune `AbstractRepositoryTest` pour utiliser la Datasource nouvellement configuré
+* Ajouter une première version de `GenericContainer` (objet java fourni par la librairie test container représentant un conteneur docker)
+
+### Modification des properties
 
 Pour ce faire, vous pouvez créer un fichier `application-test.properties` dans le dossier `src/test/resources` avec les informations suivantes :
 
@@ -60,9 +93,19 @@ spring.datasource.url=jdbc:mysql://localhost/petclinic
 spring.datasource.username=petclinic
 spring.datasource.password=petclinic
 spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
 ```
 
 Vous devez faire en sorte de charger ce fichier de configuration pour les classes de tests.
+
+### Utilisation de la nouvelle dataSource
+
+Pour utiliser la nouvelle datasource vous suffit d'ajouter l'annotation suivante sur la classe `AbstractRepositoryTest`: 
+
+```java
+@TestPropertySource(locations="classpath:application-test.properties")
+```
+
 
 Par ailleurs, l'annotation `@DataJpaTest` se charge de créer tout le nécessaire pour avoir un contexte de test opérationnel. 
 
@@ -70,12 +113,24 @@ C'est-à-dire qu'il va notamment crée une base de données en mémoire.
 
 Vous devez faire en sorte de surcharger ce comportement pour ne pas voir de base de données en mémoire.
 
+### Ajout de la première version de GenericContainer
+
+Pour l'instant l'ajout de test container passe par l'ajout d'un attribut dans la classe commune à tout les tests : 
+
+```java
+private static GenericContainer genericContainer;
+```
+
+--- 
+
+## Vérification
+
 Lancez les tests! S'ils plantent avec une belle exception
 
 ::: danger Connexion refusée
 Caused by: java.net.ConnectException: Connexion refusée (Connection refused)
 :::
 
-c'est que la base de données en mémoire a bien été désactivé. 
+c'est que la base de données en mémoire a bien été désactivé au profit de la base mysql. Plus aucun des tests de repository ne fonctionnent ! :) 
 
 
