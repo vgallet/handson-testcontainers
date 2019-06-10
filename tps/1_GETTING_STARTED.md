@@ -1,6 +1,6 @@
 # Getting Started
 
-Dans cet atelier, vous allez mettre en place [testcontainers]() pour migrer les tests d'intégrations d'une application spring boot.
+Dans cet atelier, vous allez mettre en place [Testcontainers]() pour migrer les tests d'intégrations d'une application spring boot.
 
 Il s'agit de l'application [Spring Petclinic](https://github.com/spring-projects/spring-petclinic), une application de démonstration utilisée pour montrer des cas d'exemples de certains composants de l'écosystème Spring.
 On y trouve par exemple [Spring Boot Actuator](https://www.baeldung.com/spring-boot-actuators), [Spring Data JPA](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/), [Spring Web](https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html) et [Spring Cache](https://spring.io/guides/gs/caching/).
@@ -56,4 +56,4 @@ spring.datasource.schema=classpath*:db/${database}/schema.sql
 spring.datasource.data=classpath*:db/${database}/data.sql
 ```
 
-Ce type de base données est généralement utilisée pour les tests automatisés et c'est ce que nous allons changer grâce à testcontainers.
+Ce type de base données est généralement utilisée pour les tests automatisés et c'est ce que nous allons changer grâce à Testcontainers.

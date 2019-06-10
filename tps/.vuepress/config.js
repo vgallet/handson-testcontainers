@@ -16,7 +16,8 @@ module.exports = {
         sidebar: [
             '/1_GETTING_STARTED',
             '/2_ARCHITECTURE',
-            '/3_MYSQL_CONTAINER'
+            '/3_MYSQL_CONTAINER',
+            '/4_WEB_BROWSER_CONTAINER'
         ]
     }
 };

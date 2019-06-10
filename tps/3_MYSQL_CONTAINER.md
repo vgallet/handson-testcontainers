@@ -22,12 +22,12 @@ Il s'agit maintenant d'utiliser votre image docker pour les tests de la classe `
 
 En utilisant les annotations JUnit `@BeforeClass` et `AfterClass`, vous pouvez créer votre container avec la classe `GenericContainer` et ainsi avoir une base de données mysql initialisée pour les tests.
 
-Pour fonctionner, votre container doit donc exposer le port 3306 et il faut également indiquer à `testcontainers` à quel moment le container est prêt à être utilisé.
+Pour fonctionner, votre container doit donc exposer le port 3306 et il faut également indiquer à `Testcontainers` à quel moment le container est prêt à être utilisé.
 
 
 Une fois les tests lancés, en exécutant la commande `docker ps`, que constatez-vous ?
 
-Comment testcontainers s'assure que le container est correctement démarré ?
+Comment Testcontainers s'assure que le container est correctement démarré ?
 
 Si vous arrêtez vos tests en cours d'exécution, est-ce que votre container est toujours vivant ?
  
@@ -41,7 +41,7 @@ Cela peut être utile et intéressant dans certains cas de figures, mais dans no
 Pour cela, JUnit propose les annotations `@Rule` et `@ClassRule`. Vous pouvez ainsi supprimer vos méthodes `@BeforeClass` et `AfterClass`pour utiliser une des annotations JUnit.
 
 ::: tip
-testcontainers est étroitement couplé avec JUnit4.x. Dans le cas où vos tests fonctionnent avec JUnit 5, vous devrez importer la dépendance
+Testcontainers est étroitement couplé avec JUnit4.x. Dans le cas où vos tests fonctionnent avec JUnit 5, vous devrez importer la dépendance
 
 ```
 <dependency>
@@ -52,7 +52,7 @@ testcontainers est étroitement couplé avec JUnit4.x. Dans le cas où vos tests
 </dependency>
 ```
 
-pour pouvoir utiliser les extensions testcontainers.
+pour pouvoir utiliser les extensions Testcontainers.
 :::
 
 ::: tip

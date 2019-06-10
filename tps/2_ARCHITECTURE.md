@@ -60,7 +60,7 @@ Afin de commencer la migration vers des tests utilisant une base de données MyS
 </dependency>
 ``` 
 
-Puis dans un second temps afin de prévoir l'interopérabilité avec testcontainer il faut ajouter la librairie `org.testcontainers:testcontainers`  
+Puis dans un second temps afin de prévoir l'interopérabilité avec Testcontainers il faut ajouter la librairie `org.testcontainers:testcontainers`  
 ainsi que la libraire `org.testcontainers:mysql` qui permet d'avoir une pré-packagé d'un conteneur mysql.
 
 ```xml
@@ -82,7 +82,7 @@ Ensuite il vous faut modifier la configuration pour utiliser la nouvelle base de
 
 * Modification des properties de configuration de la datasource de l'application
 * Modification de la classe commune `AbstractRepositoryTest` pour utiliser la Datasource nouvellement configuré
-* Ajouter une première version de `GenericContainer` (objet java fourni par la librairie test container représentant un conteneur docker)
+* Ajouter une première version de `GenericContainer` (objet java fourni par la librairie Testcontainers représentant un conteneur docker)
 
 ### Modification des properties
 
