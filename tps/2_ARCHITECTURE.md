@@ -102,6 +102,8 @@ Vous devez faire en sorte de charger ce fichier de configuration pour les classe
 
 Pour utiliser la nouvelle datasource vous suffit d'ajouter l'annotation suivante sur la classe `AbstractRepositoryTest`: 
 
+// TODO à cacher / ou à supprimer pour la branche de correction
+
 ```java
 @TestPropertySource(locations="classpath:application-test.properties")
 ```
@@ -131,19 +133,13 @@ public @interface DataJpaTest {
 
 Vous devez donc faire en sorte de surcharger ce comportement pour ne pas avoir de base de données en mémoire. Pour cela ajouter l'annotation suivante :  
 
+// TODO à cacher / ou à supprimer pour la branche de correction
+
 ```java
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 ```
   
 > Cette annotation permet de dire à spring boot test de ne surcharger aucune data source lors des tests
-
-### Ajout de la première version de GenericContainer
-
-Pour l'instant l'ajout de test container passe par l'ajout d'un attribut dans la classe commune à tout les tests : 
-
-```java
-private static GenericContainer genericContainer;
-```
 
 --- 
 

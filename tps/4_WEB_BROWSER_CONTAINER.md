@@ -20,6 +20,8 @@ Et même une fois terminé, il peut toujours échouer à cause de problèmes sim
 
 ## Firefox Container
 
+// TODO pas forcement préciser firefox
+
 Dans notre cas, la classe `OwnersPageIHMTest.java` est un test se basant sur l'outil Selenium et plus précisement sur le driver [HtmlUnitDriver](https://github.com/SeleniumHQ/htmlunit-driver) qui est une abstraction pour manipuler le navigateur headless [HtmlUnit](http://htmlunit.sourceforge.net/).
 
 ```java
