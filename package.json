@@ -4,7 +4,6 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
-    "vue2-collapse": "^1.0.15",
     "vuepress": "^1.0.1"
   },
   "scripts": {
