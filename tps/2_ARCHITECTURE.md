@@ -34,6 +34,7 @@ avec uniquement les interfaces des repositories et la base de donnée Inmemory p
 
 Pour bien démarrer, vous pouvez lancer la suite de test et mesurez le temps d'exécution.
 
+// TODO : duplication avec GETTING_STARTED
 Notez que les tests utilisent par défaut la configuration de l'application. 
 
 Dans ce cas, il s'agit de `src/main/resouces/application.properties`. La configuration de la base est la suivante :
@@ -44,6 +45,7 @@ database=hsqldb
 spring.datasource.schema=classpath*:db/${database}/schema.sql
 spring.datasource.data=classpath*:db/${database}/data.sql
 ```
+// END_TODO
 
 ## Amélioration des Tests
 
@@ -100,7 +102,7 @@ Vous devez faire en sorte de charger ce fichier de configuration pour les classe
 
 ### Utilisation de la nouvelle dataSource
 
-Pour utiliser la nouvelle datasource vous suffit d'ajouter l'annotation suivante sur la classe `AbstractRepositoryTest`: 
+Pour utiliser la nouvelle datasource il vous suffit d'ajouter l'annotation suivante sur la classe `AbstractRepositoryTest`: 
 
 // TODO à cacher / ou à supprimer pour la branche de correction
 
@@ -135,17 +137,27 @@ Vous devez donc faire en sorte de surcharger ce comportement pour ne pas avoir d
 
 // TODO à cacher / ou à supprimer pour la branche de correction
 
-```java
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-```
-  
-> Cette annotation permet de dire à spring boot test de ne surcharger aucune data source lors des tests
+
+<v-collapse-wrapper>
+    <div class="header" v-collapse-toggle>
+        Click me to show response
+    </div>
+    <div class="content" v-collapse-content>
+        ```java
+        @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+        ```
+        > Cette annotation permet de dire à spring boot test de ne surcharger aucune data source lors des tests
+    </div>
+</v-collapse-wrapper>
+
+<ClientOnly>
+</ClientOnly>
 
 --- 
 
 ## Vérification
 
-Lancez les tests! S'ils plantent avec une belle exception
+Lancez les tests! S'ils échouent avec une belle exception
 
 ::: danger Connexion refusée
 Caused by: java.net.ConnectException: Connexion refusée (Connection refused)
