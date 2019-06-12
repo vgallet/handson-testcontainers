@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
-    "vuepress": "0.14.8"
+    "vuepress": "^1.0.1"
   },
   "scripts": {
     "build": "vuepress build tps",

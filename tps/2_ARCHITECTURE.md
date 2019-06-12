@@ -34,17 +34,6 @@ avec uniquement les interfaces des repositories et la base de donnée Inmemory p
 
 Pour bien démarrer, vous pouvez lancer la suite de test et mesurez le temps d'exécution.
 
-Notez que les tests utilisent par défaut la configuration de l'application. 
-
-Dans ce cas, il s'agit de `src/main/resouces/application.properties`. La configuration de la base est la suivante :
-
-```
-# database init, supports mysql too
-database=hsqldb
-spring.datasource.schema=classpath*:db/${database}/schema.sql
-spring.datasource.data=classpath*:db/${database}/data.sql
-```
-
 ## Amélioration des Tests
 
 > L'objectif de cette partie est d'utiliser une base de donnée similaire à celle utilisée en production par l'application.  
@@ -100,14 +89,16 @@ Vous devez faire en sorte de charger ce fichier de configuration pour les classe
 
 ### Utilisation de la nouvelle dataSource
 
-Pour utiliser la nouvelle datasource vous suffit d'ajouter l'annotation suivante sur la classe `AbstractRepositoryTest`: 
+Pour utiliser la nouvelle datasource il vous suffit d'ajouter l'annotation suivante sur la classe `AbstractRepositoryTest`: 
 
-// TODO à cacher / ou à supprimer pour la branche de correction
+<details>
+<summary>Afficher la réponse</summary>
 
 ```java
 @TestPropertySource(locations="classpath:application-test.properties")
 ```
-
+</details>
+  
 Par ailleurs, l'annotation `@DataJpaTest` de la dépendance spring boot test se charge de créer tout le nécessaire pour avoir un contexte de test unitaire opérationnel. 
 C'est-à-dire qu'elle va notamment crée une base de données en mémoire (cf : ligne 12 ci-dessous).
 
@@ -133,19 +124,23 @@ public @interface DataJpaTest {
 
 Vous devez donc faire en sorte de surcharger ce comportement pour ne pas avoir de base de données en mémoire. Pour cela ajouter l'annotation suivante :  
 
-// TODO à cacher / ou à supprimer pour la branche de correction
+<details>
+<summary>Afficher la réponse</summary>
 
 ```java
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 ```
-  
-> Cette annotation permet de dire à spring boot test de ne surcharger aucune data source lors des tests
+</details>
+
+::: tip
+Cette annotation permet de dire à spring boot test de ne surcharger aucune data source lors des tests
+:::
 
 --- 
 
 ## Vérification
 
-Lancez les tests! S'ils plantent avec une belle exception
+Lancez les tests! S'ils échouent avec une belle exception
 
 ::: danger Connexion refusée
 Caused by: java.net.ConnectException: Connexion refusée (Connection refused)
