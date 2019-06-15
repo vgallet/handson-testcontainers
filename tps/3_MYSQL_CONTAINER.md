@@ -37,7 +37,7 @@ ADD b_data.sql /docker-entrypoint-initdb.d
 
 Il s'agit maintenant d'utiliser votre image docker pour les tests de la classe `OwnerRepositoryTests`. 
 
-En utilisant les annotations JUnit `@BeforeClass` et `AfterClass`, vous pouvez créer votre container avec l'objet `GenericContainer` dans la super classe `AbstractRepositoryTests`
+En utilisant les annotations JUnit `@Before` et `@After`, vous pouvez créer votre container avec l'objet `GenericContainer` dans la super classe `AbstractRepositoryTests`
 et ainsi avoir une base de données mysql initialisée pour les tests.
 
 Pour fonctionner, votre container doit exposer le port 3306 et doit également indiquer à `Testcontainers` à quel moment le container est prêt à être utilisé.
@@ -55,7 +55,7 @@ Si vous arrêtez vos tests en cours d'exécution, est-ce que votre container est
 ```java
 private static GenericContainer genericContainer;
 
-@BeforeClass
+@Before
 public static void setUp() {
     genericContainer = new GenericContainer("mysql-petclinic");
     genericContainer.setExposedPorts(Lists.newArrayList(3306));
@@ -65,7 +65,7 @@ public static void setUp() {
     genericContainer.start();
 }
 
-@AfterClass
+@After
 public static void tearDown() throws Exception {
     if(genericContainer != null) {
         genericContainer.stop();
@@ -74,13 +74,31 @@ public static void tearDown() throws Exception {
 ``` 
 </details>
 
+
+### Bonus
+
+A ce stade du workshop les tests devraient ce lancer correctement tout en utilisant une base de donnée mysql instancié dans docker. 
+Afin de pouvoir débugger il est souvent utile d'avoir accés au log du conteneur docker. Essayez de rajouter un `Consumer<OutputFrame>` à l'object `GenericContainer` 
+afin de logger la sortie standard (`docker log <conteneurName>`) du conteneur dans la variable `LOGGER` de la classe de test.
+
+<details>
+<summary>Afficher la réponse</summary>
+
+```java
+// print container log to LOGGER
+genericContainer.withLogConsumer(outputFrame ->
+    LOGGER.debug(((OutputFrame)outputFrame).getUtf8String())
+);
+```
+</details>
+
 ## Cycle de vie automatique
 
-En implémentant des méthodes `static` pour les annotations JUnit `@BeforeClass` et `AfterClass`, vous contrôler manuellement le cycle de vie de votre container.
+En implémentant des méthodes `static` pour les annotations JUnit `@Before` et `@After`, vous contrôler manuellement le cycle de vie de votre container.
 
 Cela peut être utile et intéressant dans certains cas de figures, mais dans notre situation nous pouvons laisser JUnit gérer le cycle de vie des containers.
 
-Pour cela, JUnit propose les annotations `@Rule` et `@ClassRule`. Vous pouvez ainsi supprimer vos méthodes `@BeforeClass` et `AfterClass`pour utiliser une des annotations JUnit.
+Pour cela, JUnit propose les annotations `@Rule` et `@ClassRule`. Vous pouvez ainsi supprimer vos méthodes `@Before` et `@After`pour utiliser une des annotations JUnit.
 
 ::: tip
 Testcontainers est étroitement couplé avec JUnit4.x. Dans le cas où vos tests fonctionnent avec JUnit 5, vous devrez importer la dépendance
@@ -141,7 +159,7 @@ public static GenericContainer genericContainer = new GenericContainer("mysql-pe
 
 En utilisant l'annotation `@ClassRule`, un container est démarré pour chacune des classes de tests. Ce n'est pas vraiment optimal et il est possible de faire en sorte que le container ne soit démarré qu'une fois pour l'ensemble de la suite de tests.
 
-Utilisez une fonctionnalité du langage java pour avoir un singleton et donc qu'une seule instance. 
+Utilisez un mot clef du langage java pour avoir un singleton de l'objet `GenericContainer` et donc qu'un seul conteneur instancié dans le daemon docker.
 
 Une fois le singleton mis en place, relancez la suite de tests et mesurez le temps d'exécution. Que constatez-vous ?
 
