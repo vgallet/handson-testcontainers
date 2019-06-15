@@ -4,7 +4,7 @@ import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
-import org.junit.ClassRule;
+import org.junit.AfterClass;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,43 +19,35 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
 import java.lang.invoke.MethodHandles;
-import java.util.function.Consumer;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(
     includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = Repository.class)
 )
-@TestPropertySource(locations="classpath:application-test.properties")
+@TestPropertySource(locations = "classpath:application-test.properties")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public abstract class AbstractRepositoryTests {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-//    @Rule
-//    public GenericContainer genericContainer = new GenericContainer("mysql-petclinic")
-//        .withExposedPorts(3306)
-//        .waitingFor(Wait.forListeningPort())
-//        .withCreateContainerCmdModifier(
-//            new Consumer<CreateContainerCmd>() {
-//                @Override
-//                public void accept(CreateContainerCmd createContainerCmd) {
-//                    createContainerCmd.withPortBindings(
-//                        new PortBinding(Ports.Binding.bindPort(3306), new ExposedPort(3306))
-//                    );
-//                }
-//            });
+    private static GenericContainer genericContainer;
 
-    @ClassRule
-    public static GenericContainer genericContainer = new GenericContainer("mysql-petclinic")
-        .withExposedPorts(3306)
-        .waitingFor(Wait.forListeningPort())
-        .withCreateContainerCmdModifier(
-            new Consumer<CreateContainerCmd>() {
-                @Override
-                public void accept(CreateContainerCmd createContainerCmd) {
-                    createContainerCmd.withPortBindings(
-                        new PortBinding(Ports.Binding.bindPort(3306), new ExposedPort(3306))
-                    );
-                }
-            });
+    static {
+        genericContainer = new GenericContainer("mysql-petclinic")
+            .withExposedPorts(3306)
+            .waitingFor(Wait.forListeningPort())
+            .withCreateContainerCmdModifier(
+                createContainerCmd -> ((CreateContainerCmd) createContainerCmd).withPortBindings(
+                    new PortBinding(Ports.Binding.bindPort(3306), new ExposedPort(3306))
+                ));
+        genericContainer.start();
+    }
+
+    // clean container
+    @AfterClass
+    public static void tearDown() {
+        if (genericContainer != null) {
+            genericContainer.stop();
+        }
+    }
 }
