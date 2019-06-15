@@ -77,7 +77,7 @@ public static void tearDown() throws Exception {
 
 ### Bonus : Gestion des logs
 
-A ce stade du workshop les tests devraient ce lancer correctement tout en utilisant une base de donnée mysql instancié dans docker. 
+A ce stade du workshop les tests devraient ce lancer correctement tout en utilisant une base de donnée mysql instancié dans docker.  
 Afin de pouvoir débugger il est souvent utile d'avoir accés au log du conteneur docker. Essayez de rajouter un `Consumer<OutputFrame>` à l'object `GenericContainer` 
 afin de logger la sortie standard (`docker log <conteneurName>`) du conteneur dans la variable `LOGGER` de la classe de test.
 
