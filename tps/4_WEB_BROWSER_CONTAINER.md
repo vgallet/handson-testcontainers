@@ -98,7 +98,62 @@ Le container précédemment crée vous permet de remplacer le driver `HtmlUnitDr
 // TODO
 
 ## Différents navigateurs
-// TODO
+
+Nos tests fonctionnent maintenant avec un navigateur Firefox mais de quelle version s'agit-il ? 
+
+En utilisant la classe `DesiredCapabilities` fournit par Selenium, spécifiez la version de firefox avec une version `66` par exemple.
+
+<details>
+<summary>Afficher la réponse</summary>
+
+```java
+static {
+    DesiredCapabilities firefox = DesiredCapabilities.firefox();
+    firefox.setPlatform(Platform.LINUX);
+    firefox.setVersion("66");
+
+    genericContainer = new BrowserWebDriverContainer()
+        .withCapabilities(firefox);
+    genericContainer.start();
+}
+```
+
+</details>
+
+Lancez le test et contrôlez alors la version de Firefox utilisé, que constatez-vous ?
+
+:::tip
+Vous pouvez connaître la version de Firefox en vous connectant directement au conteneur.
+
+<details>
+<summary>Affichez la réponse</summary>
+
+```sh
+docker exec -it <containerId> firefox -v
+```
+
+</details>
+:::
+
+
+En réalité, le module Selenium fournit par Testcontainers se base sur le projet [docker-selenium](https://github.com/SeleniumHQ/docker-selenium). Ce dernier ne propose à l'heure actuelle que les navigateurs internet Firefox et Chrome.
+
+Ainsi, il est seulement possible pour l'instant de n'exécuter ses tests IHM avec Chrome 74 ou Firefox 67.
+
+<details>
+<summary>Afficher la réponse</summary>
+
+```java
+static {
+    DesiredCapabilities chrome = DesiredCapabilities.chrome();
+
+    genericContainer = new BrowserWebDriverContainer()
+        .withCapabilities(chrome);
+    genericContainer.start();
+}
+```
+
+</details>
 
 ### Selenium Grid
 
