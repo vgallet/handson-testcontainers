@@ -2,7 +2,7 @@
 
 Une fois la base de données en mémoire désactivée, il faut maintenant créer le container mysql.
 
-Afin de correspondre aux besoinx de l'application, nous allons créer une image Docker dédiée pour les tests.
+Afin de correspondre aux besoins de l'application, nous allons créer une image Docker dédiée pour les tests.
 
 Dans le répertoire `src/test/resources/mysql` vous trouverez le fichier `Dockerfile`. Ce fichier doit être compléter pour ajouter :
  - les variables d'environnement `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD`,
