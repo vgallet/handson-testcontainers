@@ -15,10 +15,10 @@ De plus, cela nécessite beaucoup de configuration qui peut encore facilement é
 
 L'installation et la maintenance de différents navigateurs et WebDrivers pour les tests locaux et les tests de CI prennent du temps.
 
-Et même une fois terminé, il peut toujours échouer à cause de problèmes simples. Par exemple si la résolution d'écran sur les machines locales de développement et dans une CI sont différentes.
+Et même une fois terminé, ils peuvent toujours échouer à cause de problèmes simples. Par exemple si la résolution d'écran sur les machines locales de développement et dans une CI sont différentes.
 
 
-## lancement de tests selenium avec un navigateur conteneurisé
+## Tests E2E explication et lancement initial
 
 Dans le code fournis, la classe `OwnersPageIHMTest.java` est un test se basant sur l'outil Selenium et plus précisement sur le driver [HtmlUnitDriver](https://github.com/SeleniumHQ/htmlunit-driver) 
 qui est une abstraction pour manipuler le navigateur headless [HtmlUnit](http://htmlunit.sourceforge.net/).
@@ -42,6 +42,16 @@ Grâce à Testcontainers, il est possible d'encapsuler le navigateur dans un con
 Avant de démarrer la migration vers test containers, assurez-vous que le test `OwnersPageIHMTest.java` fonctionne. Il s'agit d'un test bout-en-bout qui nécessite donc que l'application soit démarrée ;-)
 :::
 
+### Remarque 
+
+Dans le test `should_find_jeff_black_owner()` on utilise la variable static `dockerIpv4` qui est initialisé avec la méthode `UtilsTest.getDockerInterfaceIp(Pattern.compile("docker[\\d]"))`.  
+
+Cette variable contient l'ip de l'interface réseau du daemon docker. En effet le navigateur qui sera lancé dans le conteneur dans 
+la prochaine partie doit pouvoir accéder au serveur spring lancé en local et en écoute sur l'adresse `0.0.0.0/8080`.
+
+
+## Lancement de tests selenium avec un navigateur conteneurisé
+
 Pour la suite, il est nécéssaire d'importer la dépendance suivante :
 
 ```xml
@@ -62,41 +72,40 @@ Le container précédemment crée vous permet de remplacer le driver `HtmlUnitDr
 <summary>Afficher la réponse</summary>
 
 ```java
-    private static BrowserWebDriverContainer genericContainer;
-    private WebDriver webDriver;
-    
-    static {
-        genericContainer = new BrowserWebDriverContainer()
-            .withCapabilities(new FirefoxOptions());
-        genericContainer.start();
-    }
+// into AbstractIntegrationTest.java
+private static BrowserWebDriverContainer genericContainer;
 
-    @Before
-    public void setUp() {
-        webDriver = genericContainer.getWebDriver();
+static {
+    genericContainer = new BrowserWebDriverContainer()
+        .withCapabilities(new FirefoxOptions());
+    genericContainer.start();
+}
+// clean container
+@AfterClass
+public static void tearDown() {
+    if (genericContainer != null) {
+        genericContainer.stop();
     }
+}
     
-    @Test
-    public void should_find_jeff_black_owner() throws InterruptedException {
-        webDriver.get("http://" + dockerIpv4 + ":8080/");
-        webDriver.findElement(By.cssSelector("[title*='find owners']")).click();
-        
-        ...
-    }
+// into OwnersPageIHMTest.java
+private static String dockerIpv4 = UtilsTest.getDockerInterfaceIp(Pattern.compile("docker[\\d]"));
+private WebDriver webDriver;
 
-    // clean container
-    @AfterClass
-    public static void tearDown() {
-        if (genericContainer != null) {
-            genericContainer.stop();
-        }
-    }
+@Before
+public void setUp() {
+    webDriver = genericContainer.getWebDriver();
+}
+
+@Test
+public void should_find_jeff_black_owner() throws InterruptedException {
+    webDriver.get("http://" + dockerIpv4 + ":8080/");
+    webDriver.findElement(By.cssSelector("[title*='find owners']")).click();
+    
+    ...
+}
 ```
 </details>
-
-::: tip
-les fichiers de données commencent par une lettre car MySQL va les charger par ordre alphabétique.
-:::
 
 ## Screenshots
 
@@ -162,7 +171,6 @@ static {
     genericContainer.start();
 }
 ```
-
 </details>
 
 Lancez le test et contrôlez alors la version de Firefox utilisé, que constatez-vous ?
@@ -176,10 +184,9 @@ Vous pouvez connaître la version de Firefox en vous connectant directement au c
 ```sh
 docker exec -it <containerId> firefox -v
 ```
-
 </details>
+</br>
 :::
-
 
 En réalité, le module Selenium fournit par Testcontainers se base sur le projet [docker-selenium](https://github.com/SeleniumHQ/docker-selenium). Ce dernier ne propose à l'heure actuelle que les navigateurs internet Firefox et Chrome.
 
@@ -197,7 +204,6 @@ static {
     genericContainer.start();
 }
 ```
-
 </details>
 
 ### Selenium Grid
