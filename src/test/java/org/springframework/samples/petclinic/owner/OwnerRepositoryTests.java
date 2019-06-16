@@ -2,14 +2,14 @@ package org.springframework.samples.petclinic.owner;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.petclinic.AbstractIntegrationTests;
+import org.springframework.samples.petclinic.AbstractRepositoryTests;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class OwnerRepositoryTests extends AbstractIntegrationTests {
+public class OwnerRepositoryTests extends AbstractRepositoryTests {
 
     @Autowired
     protected OwnerRepository owners;

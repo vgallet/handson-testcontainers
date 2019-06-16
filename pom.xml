@@ -65,10 +65,11 @@
             <artifactId>hsqldb</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!-- mysql connector driver -->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
+          <groupId>mysql</groupId>
+          <artifactId>mysql-connector-java</artifactId>
+          <scope>runtime</scope>
         </dependency>
 
         <!-- caching -->
@@ -109,49 +110,60 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- test container dependencies -->
         <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <scope>test</scope>
+          <groupId>org.testcontainers</groupId>
+          <artifactId>testcontainers</artifactId>
+          <version>1.11.2</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.testcontainers</groupId>
+          <artifactId>mysql</artifactId>
+          <version>1.11.2</version>
+          <scope>test</scope>
         </dependency>
 
+        <!-- selenium dependency -->
         <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>htmlunit-driver</artifactId>
-            <version>2.35.1</version>
+          <groupId>org.seleniumhq.selenium</groupId>
+          <artifactId>selenium-java</artifactId>
+          <scope>test</scope>
         </dependency>
-
-
-
         <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>selenium</artifactId>
-            <version>1.11.2</version>
-            <scope>test</scope>
+          <groupId>org.seleniumhq.selenium</groupId>
+          <artifactId>selenium-api</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.seleniumhq.selenium</groupId>
+          <artifactId>htmlunit-driver</artifactId>
         </dependency>
 
     </dependencies>
 
     <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-java</artifactId>
-                <version>3.141.59</version>
-            </dependency>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-api</artifactId>
-                <version>3.141.59</version>
-            </dependency>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-remote-driver</artifactId>
-                <version>3.141.59</version>
-            </dependency>
-
-
-        </dependencies>
+      <dependencies>
+        <dependency>
+          <groupId>org.seleniumhq.selenium</groupId>
+          <artifactId>selenium-java</artifactId>
+          <version>3.141.59</version>
+        </dependency>
+        <dependency>
+          <groupId>org.seleniumhq.selenium</groupId>
+          <artifactId>selenium-api</artifactId>
+          <version>3.141.59</version>
+        </dependency>
+        <dependency>
+          <groupId>org.seleniumhq.selenium</groupId>
+          <artifactId>htmlunit-driver</artifactId>
+          <version>2.35.1</version>
+        </dependency>
+        <dependency>
+          <groupId>org.seleniumhq.selenium</groupId>
+          <artifactId>selenium-remote-driver</artifactId>
+          <version>3.141.59</version>
+        </dependency>
+      </dependencies>
     </dependencyManagement>
 
     <build>
