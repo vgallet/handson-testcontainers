@@ -17,7 +17,8 @@ module.exports = {
             '/1_GETTING_STARTED',
             '/2_ARCHITECTURE',
             '/3_MYSQL_CONTAINER',
-            '/4_WEB_BROWSER_CONTAINER'
+            '/4_WEB_BROWSER_CONTAINER',
+            '/5_PAGE_PATTERN'
         ]
     }
 };
