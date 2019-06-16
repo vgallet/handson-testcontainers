@@ -73,7 +73,6 @@ Pour ce faire, vous pouvez créer un fichier `application-test.properties` dans 
 spring.datasource.url=jdbc:mysql://localhost/petclinic
 spring.datasource.username=petclinic
 spring.datasource.password=petclinic
-spring.datasource.driver-class-name=com.mysql.jdbc.Driver
 spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
 ```
 
@@ -135,7 +134,7 @@ Cette annotation permet de dire à Spring Boot Test de ne surcharger aucune data
 
 ## Vérification
 
-Lancez les tests! S'ils échouent avec une belle exception
+Lancez les tests ! S'ils échouent avec une belle exception
 
 ::: danger Connexion refusée
 Caused by: java.net.ConnectException: Connexion refusée (Connection refused)
