@@ -53,10 +53,10 @@ Pour la suite, il est nécéssaire d'importer la dépendance suivante :
 </dependency>
 ```
 
-Une fois le module importé, vous pouvez créer votre container docker exposant un navigateur Firefox grâce à la classe fournie par Testcontainers : `BrowserWebDriverContainer`.
+Une fois le module importé, vous pouvez créer votre container docker exposant un navigateur (Firefox par defaut) grâce à la classe fournie par Testcontainers : `BrowserWebDriverContainer`.
 Pour cela il est conseillez de reprendre exemple sur la classe `AbstractRepositoryTests` de la partie précédente.
 
-Le container précédemment crée vous permet de remplacer le driver `HtmlUnitDriver` par un driver Firefox. 
+Le container précédemment crée vous permet de remplacer le driver `HtmlUnitDriver` par un driver test container Firefox. 
 
 <details>
 <summary>Afficher la réponse</summary>
@@ -78,7 +78,7 @@ Le container précédemment crée vous permet de remplacer le driver `HtmlUnitDr
     
     @Test
     public void should_find_jeff_black_owner() throws InterruptedException {
-        webDriver.get("http://localhost:8080/");
+        webDriver.get("http://" + dockerIpv4 + ":8080/");
         webDriver.findElement(By.cssSelector("[title*='find owners']")).click();
         
         ...
@@ -94,8 +94,53 @@ Le container précédemment crée vous permet de remplacer le driver `HtmlUnitDr
 ```
 </details>
 
+::: tip
+les fichiers de données commencent par une lettre car MySQL va les charger par ordre alphabétique.
+:::
+
 ## Screenshots
-// TODO
+
+Dans cette partie vous allez devoir réaliser une capture d'écran du navigateur lancé dans le conteneur et persister l'image sur votre disque.  
+En reprenant le test fournis (`OwnersPageIHMTest`), capturer le resultat de la recherche du propriétaire "Jeff Black".
+
+::: tip
+Si vous souhaitez modifier la résolution de la capture d'écran ce conférer aux variables d'environnement disponible pour l'image docker `selenium/standalone-firefox-debug`.  
+:::
+
+<details>
+<summary>Afficher la réponse</summary>
+
+```java
+// into AbstractIntegrationTest.java
+Map<String, String> envs = new HashMap<>();
+envs.put("SCREEN_WIDTH", "1366");
+envs.put("SCREEN_HEIGHT", "768");
+envs.put("SCREEN_DEPTH", "24");
+
+genericContainer = (BrowserWebDriverContainer) new BrowserWebDriverContainer()
+    .withCapabilities(new FirefoxOptions())
+    .withEnv(envs);
+genericContainer.start();
+
+
+// into OwnersPageIHMTest.java
+@Test
+public void take_screenshot_jeff_black_owner() throws InterruptedException, IOException {
+    webDriver.get("http://" + dockerIpv4 + ":8080/");
+
+    webDriver.findElement(By.cssSelector("[title*='find owners']")).click();
+    WebElement lastname = webDriver.findElement(By.id("lastName"));
+    lastname.sendKeys("black");
+    lastname.submit();
+    // On attends que la page soit correctement chargée
+    Thread.sleep(1000);
+
+    File outputFile = ((RemoteWebDriver)webDriver).getScreenshotAs(OutputType.FILE);
+    File copied = new File("./screenshot.png");
+    Files.copy(outputFile.toPath(), copied.toPath(), StandardCopyOption.REPLACE_EXISTING);
+}
+```
+</details>
 
 ## Différents navigateurs
 

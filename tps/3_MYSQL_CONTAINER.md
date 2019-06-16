@@ -185,13 +185,6 @@ Une fois le singleton mis en place, relancez la suite de tests et mesurez le tem
                 ));
         genericContainer.start();
     }
-
-    // clean container
-    @AfterClass
-    public static void tearDown() {
-        if (genericContainer != null) {
-            genericContainer.stop();
-        }
-    }
+    // genericContainer.close() non utile ici car le container de supervision (Ryuk) s'en occupe
 ```
 </details>
