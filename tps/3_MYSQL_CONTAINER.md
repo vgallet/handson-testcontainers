@@ -163,3 +163,29 @@ Utilisez un mot clef du langage java pour avoir un singleton de l'objet `Generic
 
 Une fois le singleton mis en place, relancez la suite de tests et mesurez le temps d'exécution. Que constatez-vous ?
 
+<details>
+<summary>Afficher la réponse</summary>
+
+```java
+    private static GenericContainer genericContainer;
+
+    static {
+        genericContainer = new GenericContainer("mysql-petclinic")
+            .withExposedPorts(3306)
+            .waitingFor(Wait.forListeningPort())
+            .withCreateContainerCmdModifier(
+                createContainerCmd -> ((CreateContainerCmd) createContainerCmd).withPortBindings(
+                    new PortBinding(Ports.Binding.bindPort(3306), new ExposedPort(3306))
+                ));
+        genericContainer.start();
+    }
+
+    // clean container
+    @AfterClass
+    public static void tearDown() {
+        if (genericContainer != null) {
+            genericContainer.stop();
+        }
+    }
+```
+</details>
