@@ -11,7 +11,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class OwnersPageIHMTest {
 
-    WebDriver webDriver;
+    private WebDriver webDriver;
+
     @Before
     public void setUp() {
         webDriver = new HtmlUnitDriver();
