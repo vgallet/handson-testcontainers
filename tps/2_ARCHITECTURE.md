@@ -11,7 +11,7 @@ On retrouve par exemple les classes `PetController`, `OwnerController`, `VetCont
 
 Ces derniers font appel à la couche DAO qui est responsable de communiquer avec la base de données.
 
-La couche DAO est ici représentée par les interfaces `Repository`. Ce sont des interfaces car c'est le composant Spring Data qui fournira l'implémentation au runtime. 
+La couche DAO est ici représentée par les interfaces `Repository`. Ce sont des interfaces car c'est le composant [Spring Data](https://spring.io/projects/spring-data) qui fournira l'implémentation au runtime. 
 
 Pour ce faire, les interfaces doivent étendre l'interface `org.springframework.data.repository.Repository` . Par contre, il est également possible d'ajouter ces propres méthodes d'accès à la base de données grâce à l'annotation `@Query`.
 
@@ -30,7 +30,7 @@ Ces méthodes de requêtages sont testées dans les classe de tests se terminant
 Actuellement l'ensemble des tests `*RepositoryTests` étendent une classe commune nommée `AbstractRepositoryTest`.  
   
 Cette classe permet un chargement allégé du context spring 
-avec uniquement les interfaces des repositories et la base de donnée Inmemory par défaut fournit par springBootTest.
+avec uniquement les interfaces des repositories et la base de donnée Inmemory par défaut fournit par [Spring Boot Test](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html).
 
 Pour bien démarrer, vous pouvez lancer la suite de test et mesurez le temps d'exécution.
 
@@ -49,21 +49,13 @@ Afin de commencer la migration vers des tests utilisant une base de données MyS
 </dependency>
 ``` 
 
-Puis dans un second temps afin de prévoir l'interopérabilité avec Testcontainers il faut ajouter la librairie `org.testcontainers:testcontainers`  
-ainsi que la libraire `org.testcontainers:mysql` qui permet d'avoir une pré-packagé d'un conteneur mysql.
-
+Puis dans un second temps afin de prévoir l'interopérabilité avec Testcontainers il faut ajouter la librairie `org.testcontainers:testcontainers`.
 ```xml
 <dependency>
     <groupId>org.testcontainers</groupId>
     <artifactId>testcontainers</artifactId>
     <version>1.11.2</version>
     <scope>test</scope>
-</dependency>
-<dependency>
-  <groupId>org.testcontainers</groupId>
-  <artifactId>mysql</artifactId>
-  <version>1.11.2</version>
-  <scope>test</scope>
 </dependency>
 ```
 
@@ -87,19 +79,20 @@ spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
 
 Vous devez faire en sorte de charger ce fichier de configuration pour les classes de tests.
 
-### Utilisation de la nouvelle dataSource
-
-Pour utiliser la nouvelle datasource il vous suffit d'ajouter l'annotation suivante sur la classe `AbstractRepositoryTest`: 
-
 <details>
 <summary>Afficher la réponse</summary>
+
+Pour utiliser la nouvelle datasource il vous suffit d'ajouter l'annotation suivante sur la classe `AbstractRepositoryTest`: 
 
 ```java
 @TestPropertySource(locations="classpath:application-test.properties")
 ```
 </details>
+
+
+### Utilisation de la nouvelle dataSource
   
-Par ailleurs, l'annotation `@DataJpaTest` de la dépendance spring boot test se charge de créer tout le nécessaire pour avoir un contexte de test unitaire opérationnel. 
+Par ailleurs, l'annotation `@DataJpaTest` de la dépendance Spring Boot Test se charge de créer tout le nécessaire pour avoir un contexte de test unitaire opérationnel. 
 C'est-à-dire qu'elle va notamment crée une base de données en mémoire (cf : ligne 12 ci-dessous).
 
 ```java{12}
@@ -122,10 +115,12 @@ public @interface DataJpaTest {
 }
 ```
 
-Vous devez donc faire en sorte de surcharger ce comportement pour ne pas avoir de base de données en mémoire. Pour cela ajouter l'annotation suivante :  
+Vous devez donc faire en sorte de surcharger ce comportement pour ne pas avoir de base de données en mémoire.
 
 <details>
 <summary>Afficher la réponse</summary>
+
+Pour cela ajouter l'annotation suivante :
 
 ```java
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -133,7 +128,7 @@ Vous devez donc faire en sorte de surcharger ce comportement pour ne pas avoir d
 </details>
 
 ::: tip
-Cette annotation permet de dire à spring boot test de ne surcharger aucune data source lors des tests
+Cette annotation permet de dire à Spring Boot Test de ne surcharger aucune data source lors des tests
 :::
 
 --- 
