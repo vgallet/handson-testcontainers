@@ -5,22 +5,26 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.springframework.samples.petclinic.AbstractIntegrationTest;
+import org.springframework.samples.petclinic.UtilsTest;
+
+import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class OwnersPageIHMTest {
+public class OwnersPageIHMTest extends AbstractIntegrationTest {
 
     private WebDriver webDriver;
+    private static String dockerIpv4 = UtilsTest.getDockerInterfaceIp(Pattern.compile("docker[\\d]"));
 
     @Before
     public void setUp() {
-        webDriver = new HtmlUnitDriver();
+        webDriver = genericContainer.getWebDriver();
     }
 
     @Test
     public void should_find_jeff_black_owner() throws InterruptedException {
-        webDriver.get("http://localhost:8080/");
+        webDriver.get("http://" + dockerIpv4 + ":8080/");
 
         webDriver.findElement(By.cssSelector("[title*='find owners']")).click();
 
