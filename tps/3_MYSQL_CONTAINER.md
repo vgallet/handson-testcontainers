@@ -2,7 +2,7 @@
 
 Une fois la base de données en mémoire désactivée, il faut maintenant créer le container mysql.
 
-Afin de correspondre au besoin de l'application, nous allons créer une image dédiée pour les tests.
+Afin de correspondre aux besoins de l'application, nous allons créer une image Docker dédiée pour les tests.
 
 Dans le répertoire `src/test/resources/mysql` vous trouverez le fichier `Dockerfile`. Ce fichier doit être compléter pour ajouter :
  - les variables d'environnement `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD`,
@@ -30,6 +30,12 @@ ENV MYSQL_PASSWORD petclinic
 
 ADD a_schema.sql /docker-entrypoint-initdb.d
 ADD b_data.sql /docker-entrypoint-initdb.d
+```
+
+```bash
+docker build -t mysql-petclinic:latest .
+
+docker run -p 3306:3306 mysql-petclinic
 ```
 </details>
 
@@ -103,7 +109,7 @@ Pour cela, JUnit propose les annotations `@Rule` et `@ClassRule`. Vous pouvez ai
 ::: tip
 Testcontainers est étroitement couplé avec JUnit4.x. Dans le cas où vos tests fonctionnent avec JUnit 5, vous devrez importer la dépendance
 
-``````xml
+```xml
 <dependency>
     <groupId>org.testcontainers</groupId>
     <artifactId>junit-jupiter</artifactId>
