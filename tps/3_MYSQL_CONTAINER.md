@@ -1,6 +1,6 @@
 # MySQL Container
 
-Une fois la base de données en mémoire désactivée, il faut maintenant créer le container mysql.
+Une fois la base de données en mémoire désactivée, il faut maintenant créer le container Mysql.
 
 Afin de correspondre aux besoins de l'application, nous allons créer une image Docker dédiée pour les tests.
 
@@ -44,7 +44,7 @@ docker run -p 3306:3306 mysql-petclinic
 Il s'agit maintenant d'utiliser votre image docker pour les tests de la classe `OwnerRepositoryTests`. 
 
 En utilisant les annotations JUnit `@Before` et `@After`, vous pouvez créer votre container avec l'objet `GenericContainer` dans la super classe `AbstractRepositoryTests`
-et ainsi avoir une base de données mysql initialisée pour les tests.
+et ainsi avoir une base de données Mysql initialisée pour les tests.
 
 Pour fonctionner, votre container doit exposer le port 3306 et doit également indiquer à `Testcontainers` à quel moment le container est prêt à être utilisé.
 
@@ -83,7 +83,7 @@ public void tearDown() throws Exception {
 
 ### Bonus : Gestion des logs
 
-A ce stade du workshop les tests devraient ce lancer correctement tout en utilisant une base de donnée mysql instancié dans docker.  
+A ce stade du workshop les tests devraient ce lancer correctement tout en utilisant une base de donnée Mysql instancié dans docker.  
 Afin de pouvoir débugger il est souvent utile d'avoir accés aux logs du conteneur docker. Essayez de voir ce que propose Testcontainers
 afin de logger la sortie standard (`docker log <conteneurName>`) du conteneur dans la variable `LOGGER` de la classe de test.
 

@@ -39,7 +39,7 @@ Pour bien démarrer, vous pouvez lancer la suite de test et mesurez le temps d'e
 > L'objectif de cette partie est d'utiliser une base de donnée similaire à celle utilisée en production par l'application.  
 > Pour cet atelier nous allons utiliser le SGBD MYSQL.
 
-Afin de commencer la migration vers des tests utilisant une base de données MySQL, il vous faut tout d'abord ajouter la dépendance vers le driver mysql :  
+Afin de commencer la migration vers des tests utilisant une base de données MySQL, il vous faut tout d'abord ajouter la dépendance vers le driver Mysql :  
 
 ```xml
 <dependency>
@@ -141,6 +141,6 @@ Lancez les tests! S'ils échouent avec une belle exception
 Caused by: java.net.ConnectException: Connexion refusée (Connection refused)
 :::
 
-c'est que la base de données en mémoire a bien été désactivé au profit de la base mysql. Plus aucun des tests de repository ne fonctionnent ! :) 
+c'est que la base de données en mémoire a bien été désactivé au profit de la base Mysql. Plus aucun des tests de repository ne fonctionnent ! :) 
 
 

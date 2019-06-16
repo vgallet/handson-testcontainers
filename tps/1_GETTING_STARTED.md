@@ -50,7 +50,7 @@ Une fois l'application démarrée, rendez-vous ensuite sur la page [http://local
 La configuration de la base de données se trouve de l'application dans le fichier `application.properties`.
 
 ```
-# database init, supports mysql too
+# database init, supports Mysql too
 database=hsqldb
 spring.datasource.schema=classpath*:db/${database}/schema.sql
 spring.datasource.data=classpath*:db/${database}/data.sql
