@@ -42,14 +42,6 @@ Grâce à Testcontainers, il est possible d'encapsuler le navigateur dans un con
 Avant de démarrer la migration vers test containers, assurez-vous que le test `OwnersPageIHMTest.java` fonctionne. Il s'agit d'un test bout-en-bout qui nécessite donc que l'application soit démarrée ;-)
 :::
 
-### Remarque 
-
-Dans le test `should_find_jeff_black_owner()` on utilise la variable static `dockerIpv4` qui est initialisé avec la méthode `UtilsTest.getDockerInterfaceIp(Pattern.compile("docker[\\d]"))`.  
-
-Cette variable contient l'ip de l'interface réseau du daemon docker. En effet le navigateur qui sera lancé dans le conteneur dans 
-la prochaine partie doit pouvoir accéder au serveur spring lancé en local et en écoute sur l'adresse `0.0.0.0/8080`.
-
-
 ## Lancement de tests selenium avec un navigateur conteneurisé
 
 Pour la suite, il est nécéssaire d'importer la dépendance suivante :
@@ -71,7 +63,8 @@ Le container précédemment crée vous permet de remplacer le driver `HtmlUnitDr
 Sans modification particulière de la méthode `should_find_jeff_black_owner()` celle-ci devrait échouer, trouver pourquoi et remédier à ce problème.
 
 ::: tip
-La classe UtilsTest est fournit pour simplifier la correction du test `should_find_jeff_black_owner`
+La classe UtilsTest est fournit pour simplifier la correction du test `should_find_jeff_black_owner()`.  
+Noté que le serveur web écoute sur l'interface réseau `0.0.0.0/8080`
 :::
 
 <details>
