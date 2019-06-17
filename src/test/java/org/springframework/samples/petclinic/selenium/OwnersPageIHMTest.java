@@ -2,18 +2,12 @@ package org.springframework.samples.petclinic.selenium;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.samples.petclinic.AbstractIntegrationTest;
 import org.springframework.samples.petclinic.UtilsTest;
+import org.springframework.samples.petclinic.selenium.pagepattern.*;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,40 +16,60 @@ public class OwnersPageIHMTest extends AbstractIntegrationTest {
 
     private WebDriver webDriver;
     private static String dockerIpv4 = UtilsTest.getDockerInterfaceIp(Pattern.compile("docker[\\d]"));
+    private String serverUrl;
 
     @Before
     public void setUp() {
         webDriver = genericContainer.getWebDriver();
+        serverUrl = "http://" + dockerIpv4 + ":8080/";
     }
 
     @Test
     public void should_find_jeff_black_owner() throws InterruptedException {
-        webDriver.get("http://" + dockerIpv4 + ":8080/");
+        HomePage home = new HomePage(webDriver, serverUrl);
+        Page changeToFindOwnerSuccess = home.goToFindOwners();
 
-        webDriver.findElement(By.cssSelector("[title*='find owners']")).click();
+        // stay on home if go to find owners page failed
+        assertThat(changeToFindOwnerSuccess).isNotEqualTo(home);
 
-        WebElement lastname = webDriver.findElement(By.id("lastName"));
-        lastname.sendKeys("black");
-        lastname.submit();
+        Page detailBlack = ((FindOwnersPage)changeToFindOwnerSuccess).searchOwner("black");
 
-        // On attends que la page soit correctement chargée
-        Thread.sleep(1000);
-        assertThat(webDriver.getPageSource()).contains("Jeff Black");
+        // stay on FindOwnersPage if search owner failed
+        assertThat(detailBlack).isNotEqualTo(changeToFindOwnerSuccess);
+
+        // test if search sucess
+        assertThat(detailBlack).isNotInstanceOf(NotFoundOwnerPage.class);
+
+        // test if search return Jeff Black DetailOwnerPage
+        assertThat(((DetailOwnerPage)detailBlack).isDetailBlack()).isTrue();
     }
 
     @Test
-    public void take_screenshot_jeff_black_owner() throws InterruptedException, IOException {
-        webDriver.get("http://" + dockerIpv4 + ":8080/");
+    public void should_not_find_toto_owner() throws InterruptedException {
+        HomePage home = new HomePage(webDriver, serverUrl);
+        Page changeToFindOwnerSuccess = home.goToFindOwners();
 
-        webDriver.findElement(By.cssSelector("[title*='find owners']")).click();
-        WebElement lastname = webDriver.findElement(By.id("lastName"));
-        lastname.sendKeys("black");
-        lastname.submit();
-        // On attends que la page soit correctement chargée
-        Thread.sleep(1000);
+        // stay on home if go to find owners page failed
+        assertThat(changeToFindOwnerSuccess).isNotEqualTo(home);
 
-        File outputFile = ((RemoteWebDriver)webDriver).getScreenshotAs(OutputType.FILE);
-        File copied = new File("./screenshot.png");
-        Files.copy(outputFile.toPath(), copied.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        Page detailBlack = ((FindOwnersPage)changeToFindOwnerSuccess).searchOwner("toto");
+
+        // stay on FindOwnersPage if search owner failed
+        assertThat(detailBlack).isNotEqualTo(changeToFindOwnerSuccess);
+
+        // test if search sucess
+        assertThat(detailBlack).isInstanceOf(NotFoundOwnerPage.class);
+    }
+
+    @Test
+    public void take_screenshot_jeff_black_owner() throws InterruptedException {
+        HomePage home = new HomePage(webDriver, serverUrl);
+        Page changeToFindOwnerSuccess = home.goToFindOwners();
+        assertThat(changeToFindOwnerSuccess).isInstanceOf(FindOwnersPage.class);
+        Page detailBlack = ((FindOwnersPage)changeToFindOwnerSuccess).searchOwner("black");
+
+        // take screenshot and assert that it is not null
+        File detailBlackScreenshot = detailBlack.takeScreenshot("./screenshot.png");
+        assertThat(detailBlackScreenshot).isNotNull();
     }
 }
