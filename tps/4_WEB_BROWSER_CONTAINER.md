@@ -68,6 +68,12 @@ Pour cela il est conseillez de reprendre exemple sur la classe `AbstractReposito
 
 Le container précédemment crée vous permet de remplacer le driver `HtmlUnitDriver` par un driver test container Firefox. 
 
+Sans modification particulière de la méthode `should_find_jeff_black_owner()` celle-ci devrait échouer, trouver pourquoi et remédier à ce problème.
+
+::: tip
+La classe UtilsTest est fournit pour simplifier la correction du test `should_find_jeff_black_owner`
+:::
+
 <details>
 <summary>Afficher la réponse</summary>
 
