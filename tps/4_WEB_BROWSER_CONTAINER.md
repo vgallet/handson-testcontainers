@@ -198,9 +198,31 @@ static {
 ```
 </details>
 
+
+En réalité, pour pouvoir proposer ces deux navigateurs le conteneur `BrowserWebDriverContainer` met en place le mécanisme de Selenium Grid. Grâce à ce mécanisme, on peut s'attendre à ce que la liste des navigateurs et de leurs versions s'étoffent dans le futur.
+
 ### Selenium Grid
 
-L'utilisation de la selenium grid
+Selenium Grid est un outil qui permet d’exécuter les tests sur différentes machines avec différents navigateurs. Il fait partie de la suite Selenium, spécialisé dans l'exécution de plusieurs tests sur différents navigateurs, systèmes d'exploitation et machines.
+
+Selenium Grid comprend deux éléments principaux: **Hub** et **Nodes**.
 
 ![Selenium Grid](selenium_grid.png)
+
+#### Hub
+
+Le Hub est le point central dans lequel nous pouvons charger nos tests. Il agit également en tant que serveur car il contrôle le réseau de machines de test. 
+
+On ne compte qu'un seul Hub, maître du réseau, dans une Selenium Grid.
+
+Lorsqu'un test se lance avec des `DesiredCapabilities`, le Hub recherche le noeud qui correspond à la configuration donnée.
+
+Par exemple, vous pouvez indiquer que vous souhaitez exécuter le test sous Windows 10 et sur le navigateur Chrome avec verision XXX. Le Hub tentera de trouver une machine dans le réseau qui correspond aux critères et exécutera le test sur cette machine. 
+
+S'il n'y a pas de correspondance, le Hub renverra une erreur.
+
+#### Node
+
+Un Node est simplement une machine qui s'est enregistrée auprès du Hub pour lui spécifier ses capacités. Par exemple, il s'agit d'une machine sous Linux, disposant d'un navigateur Firefox XXX et Chrome XXX.
+
 
