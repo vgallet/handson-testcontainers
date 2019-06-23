@@ -2,18 +2,37 @@
 
 ## Présentation du Pattern Page
 
-Le Page Object Model design pattern est l'un des patterns les plus répandu dans les tests E2E. Ce pattern ce base sur la définition d'une interface qui représente 
-une page de l'application testé. Ce pattern permet de réduire les duplications de code et simplifie la maintenance des tests en imposant une structure logiciel.  
+Le [Page Object Model design pattern](https://martinfowler.com/bliki/PageObject.html) est l'un des patterns les plus répandu dans les tests E2E. Ce pattern ce base sur la définition d'une interface qui représente 
+une page de l'application testé. Ce pattern permet de réduire les duplications de code et simplifie la maintenance des tests en imposant une structure logicielle.  
 
-L'interface représentant le concept de page est implémenté différemment pour chaque page du site et fournis des méthodes utilitaire propres à chaque page.  
+L'interface représentant le concept de page est implémenté différemment pour chaque page du site et fournie des méthodes utilitaire propres à chaque page.  
 
 C'est méthode utilitaire permettent de valider certaine propriété de chaque page. De plus les classes pages permettent via des méthodes d'instancier les pages voisines 
 et de naviguer vers celle-ci.
 
 ## Refactoring de la classe OwnersPageIHMTest
 
-Après avoir bien compris le principe du design pattern page, essayez de réfactorer votre classe de tests `OwnersPageIHMTest` en créant une interface
+Après avoir bien compris le principe du Page Pattern, essayez de réfactorer votre classe de tests `OwnersPageIHMTest` en créant une interface
 `Page` et en implémentant chaque page de l'application comme des classes. Par exemple des classes `HomePage`, `OwnersPage`, etc ... .
+
+Dans le cas de notre test, cela pourrait la structure suivante :
+
+```java
+    @Test
+    public void should_find_jeff_black_owner() throws InterruptedException {
+        // On arrive sur la page d'acceuil de l'application
+        homePage.goTo();
+    
+        // On se rend sur la page Owner
+        OwnerPage ownerPage = homePage.goToOwnerPage();
+        
+        // On recherche un propriétaire
+        ownerPage.search("black");
+
+        // On s'assure d'avoir trouver le propriétaire Jeff Black
+        ownerPage.foundOwner("Jeff Black");
+    }
+```
 
 <details>
 <summary>Afficher la réponse</summary>
@@ -42,7 +61,7 @@ import java.nio.file.StandardCopyOption;
  */
 public interface Page {
 
-    final static Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getName());
+    static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     /**
      * retrieve {@link WebDriver} for interact with selenium page

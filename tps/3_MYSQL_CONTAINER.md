@@ -104,7 +104,11 @@ En implémentant des méthodes pour les annotations JUnit `@Before` et `@After`,
 
 Cela peut être utile et intéressant dans certains cas de figures, mais dans notre situation nous pouvons laisser JUnit gérer le cycle de vie des containers.
 
-Pour cela, JUnit propose les annotations `@Rule` et `@ClassRule`. Vous pouvez ainsi supprimer vos méthodes `@Before` et `@After`pour utiliser une des annotations JUnit.
+Pour cela, JUnit propose les annotations `@Rule` et `@ClassRule`. Ces annotations permettent l'injection des `Rule` JUnit 4.
+
+Ce sont des composants qui interceptent les appels aux méthodes de test et qui permettent de réaliser une opération avant et après l'exécution d'une méthode de test.
+
+Vous pouvez ainsi supprimer vos méthodes `@Before` et `@After`pour utiliser une des annotations JUnit.
 
 ::: tip
 Testcontainers est étroitement couplé avec JUnit4.x. Dans le cas où vos tests fonctionnent avec JUnit 5, vous devrez importer la dépendance
@@ -163,9 +167,9 @@ public static GenericContainer genericContainer = new GenericContainer("mysql-pe
 
 ## Singleton Container
 
-En utilisant l'annotation `@ClassRule`, un container est démarré pour chacune des classes de tests. Ce n'est pas vraiment optimal et il est possible de faire en sorte que le container ne soit démarré qu'une fois pour l'ensemble de la suite de tests.
+En utilisant l'annotation `@ClassRule`, un container est démarré pour chacune des classes de tests. Ce n'est pas vraiment optimal et il est possible de faire en sorte que le container ne soit démarré qu'une seule fois pour l'ensemble de la suite de tests.
 
-Utilisez un mot clef du langage java pour avoir un singleton de l'objet `GenericContainer` et donc qu'un seul conteneur instancié dans le daemon docker.
+Utilisez un mot clef du langage Java pour avoir un singleton de l'objet `GenericContainer` et donc qu'un seul conteneur instancié dans le daemon docker.
 
 Une fois le singleton mis en place, relancez la suite de tests et mesurez le temps d'exécution. Que constatez-vous ?
 

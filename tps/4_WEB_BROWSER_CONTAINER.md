@@ -58,12 +58,12 @@ Pour la suite, il est nécéssaire d'importer la dépendance suivante :
 Une fois le module importé, vous pouvez créer votre container docker exposant un navigateur (Firefox par defaut) grâce à la classe fournie par Testcontainers : `BrowserWebDriverContainer`.
 Pour cela il est conseillez de reprendre exemple sur la classe `AbstractRepositoryTests` de la partie précédente.
 
-Le container précédemment crée vous permet de remplacer le driver `HtmlUnitDriver` par un driver test container Firefox. 
+Le container précédemment crée vous permet de remplacer le driver `HtmlUnitDriver` par un driver Firefox. 
 
 Sans modification particulière de la méthode `should_find_jeff_black_owner()` celle-ci devrait échouer, trouver pourquoi et remédier à ce problème.
 
 ::: tip
-La classe UtilsTest est fournit pour simplifier la correction du test `should_find_jeff_black_owner()`.  
+La classe `UtilsTest` est fournit pour simplifier la correction du test `should_find_jeff_black_owner()`.  
 Noté que le serveur web écoute sur l'interface réseau `0.0.0.0/8080`
 :::
 
@@ -78,13 +78,6 @@ static {
     genericContainer = new BrowserWebDriverContainer()
         .withCapabilities(new FirefoxOptions());
     genericContainer.start();
-}
-// clean container
-@AfterClass
-public static void tearDown() {
-    if (genericContainer != null) {
-        genericContainer.stop();
-    }
 }
     
 // into OwnersPageIHMTest.java
@@ -154,7 +147,7 @@ public void take_screenshot_jeff_black_owner() throws InterruptedException, IOEx
 
 Nos tests fonctionnent maintenant avec un navigateur Firefox mais de quelle version s'agit-il ? 
 
-En utilisant la classe `DesiredCapabilities` fournit par Selenium, spécifiez la version de firefox avec une version `66` par exemple.
+En utilisant la classe `DesiredCapabilities` fournit par Selenium, spécifiez la version de Firefox avec une version `66` par exemple.
 
 <details>
 <summary>Afficher la réponse</summary>

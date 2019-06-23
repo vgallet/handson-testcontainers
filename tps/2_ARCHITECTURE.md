@@ -1,6 +1,6 @@
 # Architecture
 
-L'application Spring PetClinic est une application spring boot classique avec une architecture SOA (Service Oriented Application). 
+L'application Spring PetClinic est une application Spring Boot classique avec une architecture SOA (Service Oriented Application). 
 
 ![Architecture SOA&](architecture.png)
 
@@ -13,7 +13,9 @@ Ces derniers font appel à la couche DAO qui est responsable de communiquer avec
 
 La couche DAO est ici représentée par les interfaces `Repository`. Ce sont des interfaces car c'est le composant [Spring Data](https://spring.io/projects/spring-data) qui fournira l'implémentation au runtime. 
 
-Pour ce faire, les interfaces doivent étendre l'interface `org.springframework.data.repository.Repository` . Par contre, il est également possible d'ajouter ces propres méthodes d'accès à la base de données grâce à l'annotation `@Query`.
+Pour ce faire, les interfaces doivent étendre l'interface `org.springframework.data.repository.Repository`.
+
+Par contre, il est également possible d'ajouter ces propres méthodes d'accès à la base de données grâce à l'annotation `@Query`.
 
 Un exemple de cette utilisation se trouve par exemple dans la classe `OwnerRepository` :
 
@@ -29,7 +31,7 @@ Ces méthodes de requêtages sont testées dans les classe de tests se terminant
 
 Actuellement l'ensemble des tests `*RepositoryTests` étendent une classe commune nommée `AbstractRepositoryTest`.  
   
-Cette classe permet un chargement allégé du context spring 
+Cette classe permet un chargement allégé du context Spring 
 avec uniquement les interfaces des repositories et la base de donnée Inmemory par défaut fournit par [Spring Boot Test](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html).
 
 Pour bien démarrer, vous pouvez lancer la suite de test et mesurez le temps d'exécution.
