@@ -217,7 +217,7 @@ On ne compte qu'un seul Hub, maître du réseau, dans une Selenium Grid.
 
 Lorsqu'un test se lance avec des `DesiredCapabilities`, le Hub recherche le noeud qui correspond à la configuration donnée.
 
-Par exemple, vous pouvez indiquer que vous souhaitez exécuter le test sous Windows 10 et sur le navigateur Chrome avec verision XXX. Le Hub tentera de trouver une machine dans le réseau qui correspond aux critères et exécutera le test sur cette machine. 
+Par exemple, vous pouvez indiquer que vous souhaitez exécuter le test sous Windows 10 et sur le navigateur Chrome avec version XXX. Le Hub tentera de trouver une machine dans son réseau qui correspond aux critères et exécutera le test sur cette dernière. 
 
 S'il n'y a pas de correspondance, le Hub renverra une erreur.
 
