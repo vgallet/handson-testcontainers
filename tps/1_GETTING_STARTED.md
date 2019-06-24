@@ -47,7 +47,7 @@ java -jar target/spring-petclinic-2.1.0.BUILD-SNAPSHOT.jar
 Une fois l'application démarrée, rendez-vous ensuite sur la page [http://localhost:8080](http://localhost:8080).
 
 À noter que l'application démarre en utilisant une base chargée en mémoire de type hsql.
-La configuration de la base de données se trouve de l'application dans le fichier `application.properties`.
+La configuration de la base de données de l'application se trouve dans le fichier `application.properties`.
 
 ```
 # database init, supports Mysql too
