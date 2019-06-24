@@ -3,7 +3,7 @@ module.exports = {
     description: "Mise en place de testcontainers pour l'application Spring Petclinic",
     base: "/handson-testcontainers/",
     port: 3000,
-    dest: 'public/docs',
+    dest: './public/docs',
     themeConfig: {
         // Assumes GitHub. Can also be a full GitLab url.
         repo: 'vgallet/handson-testcontainers',
