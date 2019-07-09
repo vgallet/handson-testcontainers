@@ -11,7 +11,7 @@ Ils existent plusieurs solutions pour mettre en place des tests d'IHM, [Selenium
 
 Il n'est jamais simple de maintenir une base de tests fonctionnels, de tests E2E. Ces derniers sont par nature très volatiles puisqu'ils couvrent de grands pans de l'application. 
 
-De plus, cela nécessite beaucoup de configuration qui peut encore facilement échouer lorsqu’il est exécuté sur différentes machines ou dans un environnement CI (intégration continue).
+De plus, cela nécessite beaucoup de configuration qui augmente les chances d'échecs lorsque les tests sont exécutés sur différentes machines ou dans un environnement CI (intégration continue).
 
 L'installation et la maintenance de différents navigateurs et WebDrivers pour les tests locaux et les tests de CI prennent du temps.
 
@@ -39,7 +39,7 @@ Grâce à Testcontainers, il est possible d'encapsuler le navigateur dans un con
 
 
 ::: tip
-Avant de démarrer la migration vers test containers, assurez-vous que le test `OwnersPageIHMTest.java` fonctionne. Il s'agit d'un test bout-en-bout qui nécessite donc que l'application soit démarrée ;-)
+Avant de démarrer la migration vers Testcontainers, assurez-vous que le test `OwnersPageIHMTest.java` fonctionne. Il s'agit d'un test bout-en-bout qui nécessite donc que l'application soit démarrée ;-)
 :::
 
 ## Lancement de tests selenium avec un navigateur conteneurisé

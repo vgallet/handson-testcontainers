@@ -11,9 +11,11 @@ On retrouve par exemple les classes `PetController`, `OwnerController`, `VetCont
 
 Ces derniers font appel à la couche DAO qui est responsable de communiquer avec la base de données.
 
-La couche DAO est ici représentée par les interfaces `Repository`. Ce sont des interfaces car c'est le composant [Spring Data](https://spring.io/projects/spring-data) qui fournira l'implémentation au runtime. 
+La couche DAO est ici représentée par les interfaces se terminant `*Repository`.
 
-Pour ce faire, les interfaces doivent étendre l'interface `org.springframework.data.repository.Repository`.
+Ce sont des interfaces qui étendent l'interface `org.springframework.data.repository.Repository`. Le composant [Spring Data](https://spring.io/projects/spring-data) fournira l'implémentation au runtime. 
+
+Attention à ne pas les confondre avec l'annotation `org.springframework.stereotype.Repository`.
 
 Par contre, il est également possible d'ajouter ces propres méthodes d'accès à la base de données grâce à l'annotation `@Query`.
 
@@ -25,7 +27,7 @@ Un exemple de cette utilisation se trouve par exemple dans la classe `OwnerRepos
 Collection<Owner> findByLastName(@Param("lastName") String lastName);
 ```
 
-Ces méthodes de requêtages sont testées dans les classe de tests se terminant par `*RepositoryTests`. Par exemple `PetRepositoryTests`.
+Ces méthodes de requêtages sont testées dans les classe de tests se terminant par `*RepositoryTests`. Par exemple `OwnerRepositoryTests`.
 
 ## Tests initiaux
 

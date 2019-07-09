@@ -7,7 +7,7 @@ une page de l'application testé. Ce pattern permet de réduire les duplications
 
 L'interface représentant le concept de page est implémenté différemment pour chaque page du site et fournie des méthodes utilitaire propres à chaque page.  
 
-C'est méthode utilitaire permettent de valider certaine propriété de chaque page. De plus les classes pages permettent via des méthodes d'instancier les pages voisines 
+Ces méthodes utilitaires permettent de valider certaines propriétés de chaque page. De plus, les pages sous forme de classe permettent, via des méthodes, d'instancier les pages voisines 
 et de naviguer vers celle-ci.
 
 ## Refactoring de la classe OwnersPageIHMTest
@@ -15,7 +15,7 @@ et de naviguer vers celle-ci.
 Après avoir bien compris le principe du Page Pattern, essayez de réfactorer votre classe de tests `OwnersPageIHMTest` en créant une interface
 `Page` et en implémentant chaque page de l'application comme des classes. Par exemple des classes `HomePage`, `OwnersPage`, etc ... .
 
-Dans le cas de notre test, cela pourrait la structure suivante :
+Dans le cas de notre test, cela pourrait être la structure suivante :
 
 ```java
     @Test

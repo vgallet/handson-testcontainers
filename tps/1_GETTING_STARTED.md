@@ -32,7 +32,7 @@ mvn clean package
 ```
 
 ::: tip
-Le projet utilise du css compilé depuis des fichiers less. Si le css de l'application ne s'affiche pas correctement. Recompiler le css avec la commande :
+Le projet utilise du CSS compilé depuis des fichiers Less. Si le CSS de l'application ne s'affiche pas correctement. Recompiler le CSS avec la commande :
 ```
 mvn generate-resources
 ```
@@ -46,7 +46,7 @@ java -jar target/spring-petclinic-2.1.0.BUILD-SNAPSHOT.jar
 
 Une fois l'application démarrée, rendez-vous ensuite sur la page [http://localhost:8080](http://localhost:8080).
 
-À noter que l'application démarre en utilisant une base chargée en mémoire de type hsql.
+À noter que l'application démarre en utilisant une base chargée en mémoire de type [HSQLDB](https://fr.wikipedia.org/wiki/HSQLDB).
 La configuration de la base de données de l'application se trouve dans le fichier `application.properties`.
 
 ```
@@ -56,4 +56,4 @@ spring.datasource.schema=classpath*:db/${database}/schema.sql
 spring.datasource.data=classpath*:db/${database}/data.sql
 ```
 
-Ce type de base données est généralement utilisée pour les tests automatisés et c'est ce que nous allons changer grâce à Testcontainers.
+Ce type de base données est généralement utilisée pour les tests automatisés du fait de sa taille, de sa vitesse et de sa capacité à être montée en mémoire.
