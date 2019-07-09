@@ -4,7 +4,7 @@ Une fois la base de données en mémoire désactivée, il faut maintenant créer
 
 Afin de correspondre aux besoins de l'application, nous allons créer une image Docker dédiée pour les tests.
 
-Dans le répertoire `src/test/resources/mysql` vous trouverez le fichier `Dockerfile`. Ce fichier doit être compléter pour ajouter :
+Dans le répertoire `src/test/resources/mysql` vous trouverez le fichier `Dockerfile`. Ce fichier doit être complété pour ajouter :
  - les variables d'environnement `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD`,
  - les ressources `a_schema.sql`, `b_data.sql` dans le répertoire `/docker-entrypoint-initdb.d`.
 
@@ -83,8 +83,8 @@ public void tearDown() throws Exception {
 
 ### Bonus : Gestion des logs
 
-A ce stade du workshop les tests devraient ce lancer correctement tout en utilisant une base de donnée Mysql instancié dans docker.  
-Afin de pouvoir débugger il est souvent utile d'avoir accés aux logs du conteneur docker. Essayez de voir ce que propose Testcontainers
+A ce stade du workshop les tests devraient se lancer correctement tout en utilisant une base de donnée Mysql instanciée dans docker.  
+Afin de pouvoir débugger il est souvent utile d'avoir accès aux logs du conteneur docker. Essayez de voir ce que propose Testcontainers
 afin de logger la sortie standard (`docker log <conteneurName>`) du conteneur dans la variable `LOGGER` de la classe de test.
 
 <details>
@@ -100,7 +100,7 @@ genericContainer.withLogConsumer(outputFrame ->
 
 ## Cycle de vie automatique
 
-En implémentant des méthodes pour les annotations JUnit `@Before` et `@After`, vous contrôler manuellement le cycle de vie de votre container.
+En implémentant des méthodes pour les annotations JUnit `@Before` et `@After`, vous contrôlez manuellement le cycle de vie de votre container.
 
 Cela peut être utile et intéressant dans certains cas de figures, mais dans notre situation nous pouvons laisser JUnit gérer le cycle de vie des containers.
 

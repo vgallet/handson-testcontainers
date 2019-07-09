@@ -1,6 +1,6 @@
 # Architecture
 
-L'application Spring PetClinic est une application Spring Boot classique avec une architecture SOA (Service Oriented Application). 
+L'application Spring PetClinic est une application Spring Boot classique avec une architecture SOA (Service Oriented Architecture). 
 
 ![Architecture SOA&](architecture.png)
 
