@@ -11,7 +11,7 @@ On retrouve par exemple les classes `PetController`, `OwnerController`, `VetCont
 
 Ces derniers font appel à la couche DAO qui est responsable de communiquer avec la base de données.
 
-La couche DAO est ici représentée par les interfaces se terminant `*Repository`.
+La couche DAO est ici représentée par les interfaces se terminant par `*Repository`.
 
 Ce sont des interfaces qui étendent l'interface `org.springframework.data.repository.Repository`. Le composant [Spring Data](https://spring.io/projects/spring-data) fournira l'implémentation au runtime. 
 
@@ -96,7 +96,7 @@ Pour utiliser la nouvelle datasource il vous suffit d'ajouter l'annotation suiva
 ### Utilisation de la nouvelle dataSource
   
 Par ailleurs, l'annotation `@DataJpaTest` de la dépendance Spring Boot Test se charge de créer tout le nécessaire pour avoir un contexte de test unitaire opérationnel. 
-C'est-à-dire qu'elle va notamment crée une base de données en mémoire (cf : ligne 12 ci-dessous).
+C'est-à-dire qu'elle va notamment créer une base de données en mémoire (cf : ligne 12 ci-dessous).
 
 ```java{12}
 @Target(ElementType.TYPE)
