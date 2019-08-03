@@ -28,8 +28,8 @@ ENV MYSQL_DATABASE petclinic
 ENV MYSQL_USER petclinic
 ENV MYSQL_PASSWORD petclinic
 
-ADD a_schema.sql /docker-entrypoint-initdb.d
-ADD b_data.sql /docker-entrypoint-initdb.d
+ADD mysql/a_schema.sql /docker-entrypoint-initdb.d
+ADD mysql/b_data.sql /docker-entrypoint-initdb.d
 ```
 
 ```bash
