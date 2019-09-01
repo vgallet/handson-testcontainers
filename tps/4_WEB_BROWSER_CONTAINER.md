@@ -62,7 +62,7 @@ Le container précédemment crée vous permet de remplacer le driver `HtmlUnitDr
 Sans modification particulière de la méthode `should_find_jeff_black_owner()` celle-ci devrait échouer, trouver pourquoi et remédier à ce problème.
 
 ::: tip
-Notez que le serveur web écoute sur l'interface réseau `0.0.0.0/8080`, alors le navigateur firefox lancé se trouve au sein d'un conteneur.
+Notez que le serveur web lancé par le test écoute sur l'interface réseau `0.0.0.0/8080`, alors que le navigateur firefox de testcontainers se trouve dans un conteneur.
 :::
 
 <details>
