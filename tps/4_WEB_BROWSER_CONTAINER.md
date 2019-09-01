@@ -11,7 +11,7 @@ Ils existent plusieurs solutions pour mettre en place des tests d'IHM, [Selenium
 
 Il n'est jamais simple de maintenir une base de tests fonctionnels, de tests E2E. Ces derniers sont par nature très volatiles puisqu'ils couvrent de grands pans de l'application. 
 
-De plus, cela nécessite beaucoup de configuration qui augmente les chances d'échecs lorsque les tests sont exécutés sur différentes machines ou dans un environnement CI (intégration continue).
+De plus, cela nécessite beaucoup de configurations, ce qui augmente les chances d'échecs lorsque les tests sont exécutés sur différentes machines ou dans un environnement CI (intégration continue).
 
 L'installation et la maintenance de différents navigateurs et WebDrivers pour les tests locaux et les tests de CI prennent du temps.
 
@@ -39,7 +39,7 @@ Grâce à Testcontainers, il est possible d'encapsuler le navigateur dans un con
 
 
 ::: tip
-Avant de démarrer la migration vers Testcontainers, assurez-vous que le test `OwnersPageIHMTest.java` fonctionne. Il s'agit d'un test bout-en-bout qui nécessite donc que l'application soit démarrée ;-)
+Avant de démarrer la migration vers Testcontainers, assurez-vous que le test `OwnersPageIHMTest.java` fonctionne.
 :::
 
 ## Lancement de tests selenium avec un navigateur conteneurisé
@@ -56,22 +56,19 @@ Pour la suite, il est nécéssaire d'importer la dépendance suivante :
 ```
 
 Une fois le module importé, vous pouvez créer votre container docker exposant un navigateur (Firefox par defaut) grâce à la classe fournie par Testcontainers : `BrowserWebDriverContainer`.
-Pour cela il est conseillez de reprendre exemple sur la classe `AbstractRepositoryTests` de la partie précédente.
 
 Le container précédemment crée vous permet de remplacer le driver `HtmlUnitDriver` par un driver Firefox. 
 
 Sans modification particulière de la méthode `should_find_jeff_black_owner()` celle-ci devrait échouer, trouver pourquoi et remédier à ce problème.
 
 ::: tip
-La classe `UtilsTest` est fournit pour simplifier la correction du test `should_find_jeff_black_owner()`.  
-Noté que le serveur web écoute sur l'interface réseau `0.0.0.0/8080`
+Notez que le serveur web écoute sur l'interface réseau `0.0.0.0/8080`, alors le navigateur firefox lancé se trouve au sein d'un conteneur.
 :::
 
 <details>
 <summary>Afficher la réponse</summary>
 
 ```java
-// into AbstractIntegrationTest.java
 private static BrowserWebDriverContainer genericContainer;
 
 static {
@@ -80,8 +77,6 @@ static {
     genericContainer.start();
 }
     
-// into OwnersPageIHMTest.java
-private static String dockerIpv4 = UtilsTest.getDockerInterfaceIp(Pattern.compile("docker[\\d]"));
 private WebDriver webDriver;
 
 @Before
@@ -91,7 +86,9 @@ public void setUp() {
 
 @Test
 public void should_find_jeff_black_owner() throws InterruptedException {
-    webDriver.get("http://" + dockerIpv4 + ":8080/");
+    // L'adresse IP peut être obtenue sous linux avec à partir de l'interface réseau docker0
+    // Sous Mac et Windows, à partir de la version 18.03 de Docker, il est possible d'utiliser `host.docker.internal` 
+    webDriver.get("http://" + dockerIp + ":8080/");
     webDriver.findElement(By.cssSelector("[title*='find owners']")).click();
     
     ...
