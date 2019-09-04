@@ -13,7 +13,7 @@ les fichiers de données commencent par une lettre car MySQL va les charger par 
 :::
 
 Une fois le fichier complété et pour pouvoir l'utiliser directement dans la suite du workshop vous devez construire l'image docker 
-à partir de votre Dockerfile en spécifiant un tag, e.g. `mysql-petclinic`.
+à partir de votre Dockerfile en spécifiant un tag, e.g. `mysql:petclinic`.
 
 Vous pouvez également lancer votre image afin de s'assurer qu'elle démarre correctement.
 
@@ -33,55 +33,94 @@ ADD mysql/b_data.sql /docker-entrypoint-initdb.d
 ```
 
 ```bash
-docker build -t mysql-petclinic:latest .
+docker build -t mysql:petclinic .
 
-docker run -p 3306:3306 mysql-petclinic
+docker run -p 3306:3306 mysql:petclinic
 ```
 </details>
+
+<br/>
+<br/>
 
 ## Intégration dans les tests
 
 Il s'agit maintenant d'utiliser votre image docker pour les tests de la classe `OwnerRepositoryTests`. 
 
-En utilisant les annotations JUnit `@Before` et `@After`, vous pouvez créer votre container avec l'objet `GenericContainer` dans la super classe `AbstractRepositoryTests`
-et ainsi avoir une base de données Mysql initialisée pour les tests.
+Pour cela, JUnit propose les annotations `@Rule` et `@ClassRule`. Ces annotations permettent l'injection des `Rule` JUnit 4.
 
-Pour fonctionner, votre container doit exposer le port 3306 et doit également indiquer à `Testcontainers` à quel moment le container est prêt à être utilisé.
+Ce sont des composants qui interceptent les appels aux méthodes de test et qui permettent de réaliser une opération avant et après l'exécution d'une méthode de test.
 
+Pour fonctionner, votre container doit exposer le port 3306 et doit également indiquer à `Testcontainers` à quel moment le container [est prêt à être utilisé](https://www.testcontainers.org/features/startup_and_waits/).
+
+::: tip
+Vous risquez de devoir faire appel à la méthode `withCreateContainerCmdModifier` qui permet de modifier les paramètres de création du container.
+:::
+ 
+<details>
+<summary>Afficher la réponse</summary>
+
+```java
+@Rule
+public GenericContainer genericContainer = new GenericContainer("mysql:petclinic")
+    .withExposedPorts(3306)
+    .waitingFor(Wait.forListeningPort())
+    .withCreateContainerCmdModifier(
+        new Consumer<CreateContainerCmd>() {
+            @Override
+            public void accept(CreateContainerCmd createContainerCmd) {
+                createContainerCmd.withPortBindings(
+                    new PortBinding(Ports.Binding.bindPort(3306), new ExposedPort(3306))
+                );
+            }
+        });
+
+// -------------------------------- or -------------------------------- //
+
+@ClassRule
+public static GenericContainer genericContainer = new GenericContainer("mysql:petclinic")
+    .withExposedPorts(3306)
+    .waitingFor(Wait.forListeningPort())
+    .withCreateContainerCmdModifier(
+        new Consumer<CreateContainerCmd>() {
+            @Override
+            public void accept(CreateContainerCmd createContainerCmd) {
+                createContainerCmd.withPortBindings(
+                    new PortBinding(Ports.Binding.bindPort(3306), new ExposedPort(3306))
+                );
+            }
+        });
+```
+</details>
+
+<br/>
+<br/>
+
+### Cycle de vie du container ?
 
 Une fois les tests lancés, en exécutant la commande `docker ps`, que constatez-vous ?
 
 Comment Testcontainers s'assure que le container est correctement démarré ?
 
 Si vous arrêtez vos tests en cours d'exécution, est-ce que votre container est toujours vivant ?
- 
-<details>
+
+Comment est géré le cycle de vie du container ?
+
+ <details>
 <summary>Afficher la réponse</summary>
- 
-```java
-private GenericContainer genericContainer;
 
-@Before
-public void setUp() {
-    genericContainer = new GenericContainer("mysql-petclinic");
-    genericContainer.setExposedPorts(Lists.newArrayList(3306));
-    genericContainer.setPortBindings(Lists.newArrayList("3306:3306"));
-    genericContainer.waitingFor(Wait.forListeningPort());
+Lors du lancement d'un container, Testcontainers va également créer un container `quay.io/testcontainers/ryuk`.
 
-    genericContainer.start();
-}
+Le container [Ryuk](https://github.com/testcontainers/moby-ryuk) est en charge de terminer et de supprimer le container de base de données.
+Il se charge également de supprimer les élements associés à un container tel que son volume par exemple.
 
-@After
-public void tearDown() throws Exception {
-    if(genericContainer != null) {
-        genericContainer.stop();
-    }
-}
-``` 
+Dans ce cas précis, c'est grâce aux annotations `@Rule` ou `@ClassRule` qu'est lancé et stoppé le container durant les tests.
+
 </details>
 
+<br/>
+<br/>
 
-### Bonus : Gestion des logs
+### Gestion des logs
 
 A ce stade du workshop les tests devraient se lancer correctement tout en utilisant une base de donnée Mysql instanciée dans docker.  
 Afin de pouvoir débugger il est souvent utile d'avoir accès aux logs du conteneur docker. Essayez de voir ce que propose Testcontainers
@@ -98,20 +137,14 @@ genericContainer.withLogConsumer(outputFrame ->
 ```
 </details>
 
-## Cycle de vie automatique
+<br/>
+<br/>
 
-En implémentant des méthodes pour les annotations JUnit `@Before` et `@After`, vous contrôlez manuellement le cycle de vie de votre container.
+### JUnit Jupiter aka JUnit 5
 
-Cela peut être utile et intéressant dans certains cas de figures, mais dans notre situation nous pouvons laisser JUnit gérer le cycle de vie des containers.
+Testcontainers est étroitement couplé avec JUnit4.x car les objets `GenericContainer` sont des rules au sens Junit 4 puisqu'ils implémentent l'interface `org.junit.rules.TestRule`.
 
-Pour cela, JUnit propose les annotations `@Rule` et `@ClassRule`. Ces annotations permettent l'injection des `Rule` JUnit 4.
-
-Ce sont des composants qui interceptent les appels aux méthodes de test et qui permettent de réaliser une opération avant et après l'exécution d'une méthode de test.
-
-Vous pouvez ainsi supprimer vos méthodes `@Before` et `@After`pour utiliser une des annotations JUnit.
-
-::: tip
-Testcontainers est étroitement couplé avec JUnit4.x. Dans le cas où vos tests fonctionnent avec JUnit 5, vous devrez importer la dépendance
+Dans le cas où vos tests fonctionnent avec JUnit 5, vous devrez importer la dépendance :
 
 ```xml
 <dependency>
@@ -122,48 +155,32 @@ Testcontainers est étroitement couplé avec JUnit4.x. Dans le cas où vos tests
 </dependency>
 ```
 
-pour pouvoir utiliser les extensions Testcontainers.
-:::
-
-::: tip
-Vous risquez de devoir faire appel à la méthode `withCreateContainerCmdModifier` qui permet de modifier les paramètres de création du container.
-:::
-
-<details>
-<summary>Afficher la réponse</summary>
+pour pouvoir utiliser [les extensions Testcontainers](https://www.testcontainers.org/test_framework_integration/junit_5/).
 
 ```java
-@Rule
-public GenericContainer genericContainer = new GenericContainer("mysql-petclinic")
-    .withExposedPorts(3306)
-    .waitingFor(Wait.forListeningPort())
-    .withCreateContainerCmdModifier(
-        new Consumer<CreateContainerCmd>() {
-            @Override
-            public void accept(CreateContainerCmd createContainerCmd) {
-                createContainerCmd.withPortBindings(
-                    new PortBinding(Ports.Binding.bindPort(3306), new ExposedPort(3306))
-                );
-            }
-        });
+@Testcontainers
+class MyTestcontainersTests {
 
-// -------------------------------- or -------------------------------- //
+     // will be shared between test methods
+    @Container
+    private static final MySQLContainer MY_SQL_CONTAINER = new MySQLContainer();
 
-@ClassRule
-public static GenericContainer genericContainer = new GenericContainer("mysql-petclinic")
-    .withExposedPorts(3306)
-    .waitingFor(Wait.forListeningPort())
-    .withCreateContainerCmdModifier(
-        new Consumer<CreateContainerCmd>() {
-            @Override
-            public void accept(CreateContainerCmd createContainerCmd) {
-                createContainerCmd.withPortBindings(
-                    new PortBinding(Ports.Binding.bindPort(3306), new ExposedPort(3306))
-                );
-            }
-        });
+     // will be started before and stopped after each test method
+    @Container
+    private PostgreSQLContainer postgresqlContainer = new PostgreSQLContainer()
+            .withDatabaseName("foo")
+            .withUsername("foo")
+            .withPassword("secret");
+    @Test
+    void test() {
+        assertTrue(MY_SQL_CONTAINER.isRunning());
+        assertTrue(postgresqlContainer.isRunning());
+    }
+}
 ```
-</details>
+
+<br/>
+<br/>
 
 ## Singleton Container
 
@@ -180,7 +197,7 @@ Une fois le singleton mis en place, relancez la suite de tests et mesurez le tem
     private static GenericContainer genericContainer;
 
     static {
-        genericContainer = new GenericContainer("mysql-petclinic")
+        genericContainer = new GenericContainer("mysql:petclinic")
             .withExposedPorts(3306)
             .waitingFor(Wait.forListeningPort())
             .withCreateContainerCmdModifier(
@@ -192,3 +209,58 @@ Une fois le singleton mis en place, relancez la suite de tests et mesurez le tem
     // genericContainer.close() non utile ici car le container de supervision (Ryuk) s'en occupe
 ```
 </details>
+
+<br/>
+<br/>
+
+## JDBC URL Container
+
+Testcontainers propose également d'intégrer un container de base de données [directement depuis le driver](https://www.testcontainers.org/modules/databases/#jdbc-url-examples) de communication avec la base de données. 
+
+Ainsi, le driver `ContainerDatabaseDriver` fourni par Testcontainers se charge de démarrer le container à la première connexion à la base de données. 
+
+De plus, toute la configuration de création du container est déclarée dans l'URL de connexion.
+
+Pour pouvoir utiliser cette façon de déclarer le container MySQL, il faut modifier la propriété de l'URL de connexion à la base :
+
+```
+spring.datasource.url=jdbc:tc:mysql:petclinic://localhost/petclinic
+```
+
+- `jdbc:tc`, indique que l'on utilise Testcontainers comme JDBC provider
+- `mysql:petclinic`, ici on déclare notre image Docker
+- `localhost`, le nom du host du serveur, il est possible de mettre n'importe quelle valeur
+- `petclinic`, le nom de la base de données
+
+
+Puis, il est nécessaire de déclarer le driver fourni par Testcontainers :
+
+```
+spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDriver
+```
+
+<details>
+<summary>Afficher la réponse</summary>
+
+```java
+@RunWith(SpringRunner.class)
+@DataJpaTest(
+    properties = {
+        "spring.datasource.url=jdbc:tc:mysql:petclinic://localhost/petclinic",
+        "spring.datasource.username=petclinic",
+        "spring.datasource.password=petclinic",
+        "spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect",
+        "spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDriver"
+    },
+    includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = Repository.class)
+)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public abstract class AbstractRepositoryTests {}
+```
+</details>
+
+:::tip
+
+À l'heure actuelle, le driver `ContainerDatabaseDriver` ne supporte que les bases de données de type MySQL, PostgreSQL et Oracle. 
+
+:::

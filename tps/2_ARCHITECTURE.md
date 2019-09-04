@@ -71,27 +71,35 @@ Ensuite il vous faut modifier la configuration pour utiliser la nouvelle base de
 
 ### Modification des properties
 
-Pour ce faire, vous pouvez créer un fichier `application-test.properties` dans le dossier `src/test/resources` avec les informations suivantes :
-
+Afin de configurer les tests pour qu'ils utilisent la datasource MySQL, vous devez faire en sorte d'ajouter ces nouvelles propriétés de configuration :
+ 
 ```
 spring.datasource.url=jdbc:mysql://localhost/petclinic
-spring.datasource.username=petclinic
-spring.datasource.password=petclinic
+spring.datasource.username=petclinic,
+spring.datasource.password=petclinic,
 spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
 ```
-
-Vous devez faire en sorte de charger ce fichier de configuration pour les classes de tests.
+::: tip
+Il existe plusieurs manières de surcharger des propriétés de configuration, aussi bien par fichier que par annotation.
+:::
 
 <details>
 <summary>Afficher la réponse</summary>
 
-Pour utiliser la nouvelle datasource il vous suffit d'ajouter l'annotation suivante sur la classe `AbstractRepositoryTest`: 
-
 ```java
-@TestPropertySource(locations="classpath:application-test.properties")
+@DataJpaTest(
+    properties = {
+        "spring.datasource.url=jdbc:mysql://localhost/petclinic",
+        "spring.datasource.username=petclinic",
+        "spring.datasource.password=petclinic",
+        "spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect"
+    },
+    includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = Repository.class)
+)
+public abstract class AbstractRepositoryTests {...}
 ```
-</details>
 
+</details>
 
 ### Utilisation de la nouvelle dataSource
   
@@ -131,7 +139,7 @@ Pour cela ajouter l'annotation suivante :
 </details>
 
 ::: tip
-Cette annotation permet de dire à Spring Boot Test de ne surcharger aucune data source lors des tests
+Cette annotation permet de dire à SpringBoot Test de ne surcharger aucune datasource lors des tests
 :::
 
 --- 
