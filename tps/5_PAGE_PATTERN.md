@@ -2,13 +2,13 @@
 
 ## Présentation du Pattern Page
 
-Le [Page Object Model design pattern](https://martinfowler.com/bliki/PageObject.html) est l'un des patterns les plus répandu dans les tests E2E. Ce pattern se base sur la définition d'une interface qui représente 
+Le [Page Object Model design pattern](https://martinfowler.com/bliki/PageObject.html) est l'un des patterns les plus répandu dans les tests E2E. Ce pattern ce base sur la définition d'une interface qui représente 
 une page de l'application testé. Ce pattern permet de réduire les duplications de code et simplifie la maintenance des tests en imposant une structure logicielle.  
 
-L'interface représentant le concept de page est implémenté différemment pour chaque page du site et fournie des méthodes utilitaire propres à chaque page.  
+L'interface représentant le concept de page est implémenté différemment pour chaque page du site et fournit des méthodes utilitaires propres à chaque page.  
 
 Ces méthodes utilitaires permettent de valider certaines propriétés de chaque page. De plus, les pages sous forme de classe permettent, via des méthodes, d'instancier les pages voisines 
-et de naviguer vers celle-ci.
+et de naviguer vers celles-ci.
 
 ## Refactoring de la classe OwnersPageIHMTest
 
