@@ -102,7 +102,7 @@ Dans cette partie vous allez devoir réaliser une capture d'écran du navigateur
 En reprenant le test fournis (`OwnersPageIHMTest`), capturer le resultat de la recherche du propriétaire "Jeff Black".
 
 ::: tip
-Si vous souhaitez modifier la résolution de la capture d'écran ce conférer aux variables d'environnement disponible pour l'image docker `selenium/standalone-firefox-debug`.  
+Si vous souhaitez modifier la résolution de la capture d'écran, se conférer aux variables d'environnement disponible pour l'image docker `selenium/standalone-firefox-debug`.  
 :::
 
 <details>
