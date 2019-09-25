@@ -20,7 +20,7 @@ Dans le cas de notre test, cela pourrait être la structure suivante :
 ```java
     @Test
     public void should_find_jeff_black_owner() throws InterruptedException {
-        // On arrive sur la page d'acceuil de l'application
+        // On arrive sur la page d'accueil de l'application
         homePage.goTo();
     
         // On se rend sur la page Owner
@@ -29,7 +29,7 @@ Dans le cas de notre test, cela pourrait être la structure suivante :
         // On recherche un propriétaire
         ownerPage.search("black");
 
-        // On s'assure d'avoir trouver le propriétaire Jeff Black
+        // On s'assure d'avoir trouvé le propriétaire Jeff Black
         ownerPage.foundOwner("Jeff Black");
     }
 ```
@@ -57,20 +57,20 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
 /**
- * interface which represent a GUI interface on website
+ * Interface which represents a GUI interface on website.
  */
 public interface Page {
 
     static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     /**
-     * retrieve {@link WebDriver} for interact with selenium page
+     * Retrieve {@link WebDriver} for interact with selenium page.
      * @return
      */
     WebDriver getWebDriver();
 
     /**
-     * get {@link WebElement} by html selector
+     * Get {@link WebElement} by html selector.
      * @param htmlSelector
      * @return
      */
@@ -79,7 +79,7 @@ public interface Page {
     }
 
     /**
-     * get {@link WebElement} by html id
+     * Get {@link WebElement} by HTML id.
      * @param idName
      * @return
      */
@@ -88,7 +88,7 @@ public interface Page {
     }
 
     /**
-     * get {@link WebElement} by html class
+     * Get {@link WebElement} by html class.
      * @param className
      * @return
      */
@@ -97,7 +97,7 @@ public interface Page {
     }
 
     /**
-     * generate click event on {@link WebElement}
+     * Generate click event on {@link WebElement}.
      * @param element
      */
     default void clickElement(WebElement element) {
@@ -105,7 +105,7 @@ public interface Page {
     }
 
     /**
-     * take screen shot of current webPage
+     * Take screen shot of current webPage.
      * @param outputPath
      * @return
      */
