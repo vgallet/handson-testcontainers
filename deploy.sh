@@ -30,10 +30,10 @@ cd public/
 git add -A
 
 os=$(getOs)
-if [ "$os" == "macos" ]; 
+if [ "$os" = "macos" ];
 then 
     DATE=$(date -u "+%Y-%m-%dT%H:%M:%S%z"); 
-elif [ "$os" == "linux" ]; 
+elif [ "$os" = "linux" ];
 then
     DATE=$(date -Iseconds);
 else
@@ -42,9 +42,14 @@ fi;
 
 git commit -m "release $DATE"
 
-git push
+if [ -n $GITHUB_TOKEN ] && [ -n $GITHUB_USER ];
+then
+    git remote set-url origin https://$GITHUB_USER:$GITHUB_TOKEN@github.com/Zenika/handson-testcontainers.git
+fi
 
-# return tto parent repository
+git push origin HEAD:master
+
+# return to parent repository
 cd ../
 
 git submodule sync --recursive
@@ -52,6 +57,11 @@ git add ./public/
 
 git commit -m "release public folder"
 
-git push
+if [ -n $GITHUB_TOKEN ] && [ -n $GITHUB_USER ];
+then
+    git remote set-url origin https://$GITHUB_USER:$GITHUB_TOKEN@github.com/RouxAntoine/handson-testcontainers.git
+fi
+
+git push origin HEAD:master
 
 

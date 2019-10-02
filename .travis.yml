@@ -1,19 +1,16 @@
 language: node_js
 node_js:
-  - "stable"
-
+- stable
 cache:
   directories:
-    - "node_modules"
-
-#before_install:
-#  - npm install --bin-links
-
+  - node_modules
 jobs:
   include:
-    - stage: build github page
-      node_js: "stable"
-      script:
-        - ./deploy.sh
-#        - npm run build
-
+  - stage: build github page
+    node_js: stable
+    script:
+    - sh deploy.sh
+env:
+  global:
+  - secure: kKlMVDZ36ZLHrxhPmkcNhl8YhTfwGihH6YVSdSgSfA6RvRaZuHvbyIdPz5c+hHfnBzz0U6A/Xi4kqDK8gDGG++iRjkjNa/DzLUohuG8GRvi3vtd1ZbfjFpaesDhIWiyGStStuychjemRTd0W/jDHKZAajCNjYTIQ4a3P9zZw00pLlNFtpA+5dEVSXaEI7rc3IZryikV40m4dQdZOBssp0bggzuDM/eYILT8HAJ463PmAvr/21SE/05yIkYa80fP7htMDrvfoAqEgc/GBhyl721G30LdTD0WIR5PlP8qfv5H+ftU3EA6G+zGBSMLIbUyT51Z7Oz1nbDpxXFcClmyxcPsPkxOYpn0y4ZTSGQaa99cvpemE6+dz2mRcpoo5aso1ZQExVSkKRV/Nrhl2RE1yF6lSpQ97Q+U0MDzw9U51EDHefcgBAv5yGLkJq3BErFymwao/xrqODiKJNiMImHJUC+qnmeqF84t21opEeUMz05GKH8UO8os7M/2vkJCVgbYZ+QsrRwzDS371JkQ+zM1YEpLfIocF0/jD21VeiFltQYYiQoZpELJUhEfcOHSw7U+/0nzeyVXRfI6wMcwqD1RN9WenmaTCyYjWlfAT4XnvZihgt1Ry3kgPhycHAfMgzo1wNf3kFh08ZsBLNU+HXC+82cuyV4RFchHh65255AmMCm4=
+  - secure: MNlYF/vk08+OVmd2yXIjb1NRPCAwG/nkjA74jrJ2KvhTSbiDBMhQuQX1Hl9oc69n5iu5k8ILIexkY0WBhuPbTpTafsoAKD+Acv04ludz12l2yes/fcSOVNYoMDjMz7iwfqFLNuT36tTM1i6kPMAkHbinZx3E7m6IWDEEoC8gtAmIofkLgDqZzjqVVON/OGiz3RKSEh6RCCJnJlU1ApdbfRblQ4KQ/WYeZmoY1dInz2bKIMauoYoEWCWNXqEOyHoLQncZAXr+OveV/E8BzZ7Ir+ldWXjDm04VwGz1uXKEBp7g3CjzQpH0BFfk/4qLrliaK+tA6OMFw/K/WjVVocRlEx3zMB4VDB9OeNMLgk8LoK02XhhicW3Kg5GfwAOd56RZJI2/t5Wvs1lBg+eAS6DtwNrih6lBX5s+ec3aUMjhfyq/d0udha4h2Ccyz5HMrak3eIaUB+y6qdGzD2ZCyFE9CykQVq2y4ykuaZ7/YdeDZuuMiFk4NpmkCMbrTYdXpqGgy3n1PKHmqywWHLuTGBxkWHiOkNx9V+wvduxpDKMw7j7+wLUGJXr4zuABa/RWn00xqW2VaoNYpSxyuPMlYrp/bkZ3eKMKosEfANEXfhJtdT4Giq0qJ9ei4+l90f5L3z5gvYRbYZ2vYTY4jSEq6xWyRYKivL4TIszIxOSWmZWNpjM=
