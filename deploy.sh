@@ -40,7 +40,7 @@ else
     exit 1
 fi;
 
-git commit -m "release $DATE"
+git commit -m "Release $DATE"
 
 if [ -n $GITHUB_TOKEN ] && [ -n $GITHUB_USER ];
 then
@@ -55,7 +55,8 @@ cd ../
 git submodule sync --recursive
 git add ./public/
 
-git commit -m "release public folder"
+# skip travis to avoid travis build retry
+git commit -m "[skip travis] Release public folder"
 
 if [ -n $GITHUB_TOKEN ] && [ -n $GITHUB_USER ];
 then
