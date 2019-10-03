@@ -1,15 +1,21 @@
 language: node_js
 node_js:
-- stable
+  - stable
+
 cache:
   directories:
   - node_modules
+
+before_script:
+  - if [ -z $(git diff HEAD~14 HEAD tps) ]; then travis_terminate 0; fi
+
 jobs:
   include:
   - stage: build github page
     node_js: stable
     script:
-    - sh deploy.sh
+      - sh deploy.sh
+
 env:
   global:
   - secure: kKlMVDZ36ZLHrxhPmkcNhl8YhTfwGihH6YVSdSgSfA6RvRaZuHvbyIdPz5c+hHfnBzz0U6A/Xi4kqDK8gDGG++iRjkjNa/DzLUohuG8GRvi3vtd1ZbfjFpaesDhIWiyGStStuychjemRTd0W/jDHKZAajCNjYTIQ4a3P9zZw00pLlNFtpA+5dEVSXaEI7rc3IZryikV40m4dQdZOBssp0bggzuDM/eYILT8HAJ463PmAvr/21SE/05yIkYa80fP7htMDrvfoAqEgc/GBhyl721G30LdTD0WIR5PlP8qfv5H+ftU3EA6G+zGBSMLIbUyT51Z7Oz1nbDpxXFcClmyxcPsPkxOYpn0y4ZTSGQaa99cvpemE6+dz2mRcpoo5aso1ZQExVSkKRV/Nrhl2RE1yF6lSpQ97Q+U0MDzw9U51EDHefcgBAv5yGLkJq3BErFymwao/xrqODiKJNiMImHJUC+qnmeqF84t21opEeUMz05GKH8UO8os7M/2vkJCVgbYZ+QsrRwzDS371JkQ+zM1YEpLfIocF0/jD21VeiFltQYYiQoZpELJUhEfcOHSw7U+/0nzeyVXRfI6wMcwqD1RN9WenmaTCyYjWlfAT4XnvZihgt1Ry3kgPhycHAfMgzo1wNf3kFh08ZsBLNU+HXC+82cuyV4RFchHh65255AmMCm4=
