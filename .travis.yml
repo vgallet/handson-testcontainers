@@ -7,7 +7,7 @@ cache:
   - node_modules
 
 before_script:
-  - if [ -z $(git diff HEAD~14 HEAD tps) ]; then travis_terminate 0; fi
+  - if [ -z $(git diff HEAD~1 HEAD tps) ]; then travis_terminate 0; fi
 
 jobs:
   include:
