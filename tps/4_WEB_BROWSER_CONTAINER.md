@@ -109,7 +109,7 @@ Si vous souhaitez modifier la résolution de la capture d'écran, se conférer a
 <summary>Afficher la réponse</summary>
 
 ```java
-// into AbstractIntegrationTest.java
+// into AbstractIntegrationTest
 Map<String, String> envs = new HashMap<>();
 envs.put("SCREEN_WIDTH", "1366");
 envs.put("SCREEN_HEIGHT", "768");
