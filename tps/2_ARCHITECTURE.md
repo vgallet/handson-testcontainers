@@ -5,7 +5,7 @@ L'application Spring PetClinic est une application Spring Boot classique avec un
 ![Architecture SOA&](architecture.png)
 
 
-Les classes se terminant par `*Controller` sont les endpoints HTTP exposant des services permettant de manipuler les entités.
+Les classes se terminant par `*Controller` sont des endpoints HTTP exposant des services permettant de manipuler les entités.
 
 On retrouve par exemple les classes `PetController`, `OwnerController`, `VetController`, etc. 
 
@@ -27,7 +27,7 @@ Un exemple de cette utilisation se trouve par exemple dans la classe `OwnerRepos
 Collection<Owner> findByLastName(@Param("lastName") String lastName);
 ```
 
-Ces méthodes de requêtages sont testées dans les classe de tests se terminant par `*RepositoryTests`. Par exemple `OwnerRepositoryTests`.
+Ces méthodes de requêtages sont testées dans les classes de tests se terminant par `*RepositoryTests`. Par exemple `OwnerRepositoryTests`.
 
 ## Tests initiaux
 
