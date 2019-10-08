@@ -73,10 +73,10 @@ Ensuite il vous faut modifier la configuration pour utiliser la nouvelle base de
 
 Afin de configurer les tests pour qu'ils utilisent la datasource MySQL, vous devez faire en sorte d'ajouter ces nouvelles propriétés de configuration :
  
-```
+```properties
 spring.datasource.url=jdbc:mysql://localhost/petclinic
-spring.datasource.username=petclinic,
-spring.datasource.password=petclinic,
+spring.datasource.username=petclinic
+spring.datasource.password=petclinic
 spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
 ```
 ::: tip
