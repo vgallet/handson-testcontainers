@@ -239,6 +239,9 @@ Puis, il est nécessaire de déclarer le driver fourni par Testcontainers :
 spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDriver
 ```
 
+Afin d'utiliser ce driver il faut aussi ajouter la dépendance testcontainers correspondant à une base de donnée mysql. 
+Dépendance que vous pourrez trouver sur [maven repository](https://mvnrepository.com/artifact/org.testcontainers)
+
 <details>
 <summary>Afficher la réponse</summary>
 
@@ -256,6 +259,15 @@ spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDri
 )
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public abstract class AbstractRepositoryTests {}
+```
+
+```xml
+<dependency>
+    <groupId>org.testcontainers</groupId>
+    <artifactId>mysql</artifactId>
+    <version>1.11.2</version>
+    <scope>test</scope>
+</dependency>
 ```
 </details>
 
