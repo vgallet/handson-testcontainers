@@ -223,7 +223,7 @@ De plus, toute la configuration de création du container est déclarée dans l'
 
 Pour pouvoir utiliser cette façon de déclarer le container MySQL, il faut modifier la propriété de l'URL de connexion à la base :
 
-```
+```properties
 spring.datasource.url=jdbc:tc:mysql:petclinic://localhost/petclinic
 ```
 
@@ -235,7 +235,7 @@ spring.datasource.url=jdbc:tc:mysql:petclinic://localhost/petclinic
 
 Puis, il est nécessaire de déclarer le driver fourni par Testcontainers :
 
-```
+```properties
 spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDriver
 ```
 

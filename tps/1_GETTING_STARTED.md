@@ -49,7 +49,7 @@ Une fois l'application démarrée, rendez-vous ensuite sur la page [http://local
 À noter que l'application démarre en utilisant une base chargée en mémoire de type [HSQLDB](https://fr.wikipedia.org/wiki/HSQLDB).
 La configuration de la base de données de l'application se trouve dans le fichier `src/main/resources/application.properties`.
 
-```
+```properties
 # database init, supports Mysql too
 database=hsqldb
 spring.datasource.schema=classpath*:db/${database}/schema.sql
