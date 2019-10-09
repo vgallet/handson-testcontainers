@@ -18,20 +18,42 @@ getOs()
     esac
 }
 
+# pull two repositories
+updateLocal()
+{
+    cd public/
+    git pull origin master
+    cd ../
+    git pull origin master
+}
+
+# set git credential thanks to env variables into github url
+setGitCredential()
+{
+    cd public/
+    if [ -n $GITHUB_TOKEN ] && [ -n $GITHUB_USER ];
+    then
+        git remote set-url origin https://$GITHUB_USER:$GITHUB_TOKEN@github.com/Zenika/handson-testcontainers.git
+    fi
+
+    cd ../
+    if [ -n $GITHUB_TOKEN ] && [ -n $GITHUB_USER ];
+    then
+        git remote set-url origin https://$GITHUB_USER:$GITHUB_TOKEN@github.com/RouxAntoine/handson-testcontainers.git
+    fi
+}
+
 set -e         # -x print all command (to debug), -e exit at any command failure
+
+$(setGitCredential)
+$(updateLocal)
 
 if [ ! -d "./node_modules" ]; then
     npm install --bin-links
 fi
-
 npm run build
 
 cd public/
-if [ -n $GITHUB_TOKEN ] && [ -n $GITHUB_USER ];
-then
-    git remote set-url origin https://$GITHUB_USER:$GITHUB_TOKEN@github.com/Zenika/handson-testcontainers.git
-fi
-git pull origin master
 git add -A
 
 os=$(getOs)
@@ -50,17 +72,9 @@ git push origin HEAD:master
 
 # return to parent repository
 cd ../
-if [ -n $GITHUB_TOKEN ] && [ -n $GITHUB_USER ];
-then
-    git remote set-url origin https://$GITHUB_USER:$GITHUB_TOKEN@github.com/RouxAntoine/handson-testcontainers.git
-fi
-
-git pull origin master
 git submodule sync --recursive
 git add ./public/
 
 # skip travis to avoid travis build retry
 git commit -m "[skip travis] Release public folder"
 git push origin HEAD:master
-
-
