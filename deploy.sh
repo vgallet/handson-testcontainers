@@ -39,7 +39,7 @@ setGitCredential()
     cd ../
     if [ -n $GITHUB_TOKEN ] && [ -n $GITHUB_USER ];
     then
-        git remote set-url origin https://$GITHUB_USER:$GITHUB_TOKEN@github.com/RouxAntoine/handson-testcontainers.git
+        git remote set-url origin https://$GITHUB_USER:$GITHUB_TOKEN@github.com/$GITHUB_USER/handson-testcontainers.git
     fi
 }
 
