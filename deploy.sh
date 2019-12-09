@@ -31,7 +31,7 @@ updateLocal()
 setGitCredential()
 {
     cd public/
-    if [ -n $GITHUB_TOKEN ] && [ -n $GITHUB_USER ];
+    if [ ! "q$GITHUB_TOKEN" = "q" ] && [ ! "q$GITHUB_USER" = "q" ];
     then
         git remote set-url origin https://$GITHUB_USER:$GITHUB_TOKEN@github.com/Zenika/handson-testcontainers.git
     fi
@@ -46,7 +46,7 @@ setGitCredential()
 set -e         # -x print all command (to debug), -e exit at any command failure
 
 $(setGitCredential)
-$(updateLocal)
+$(updateLocal > /dev/null)
 
 if [ ! -d "./node_modules" ]; then
     npm install --bin-links
