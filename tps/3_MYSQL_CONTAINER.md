@@ -46,11 +46,42 @@ docker run -p 3306:3306 mysql:petclinic
 
 Il s'agit maintenant d'utiliser votre image docker pour les tests de la classe `OwnerRepositoryTests`. 
 
-Pour cela, JUnit propose les annotations `@Rule` et `@ClassRule`. Ces annotations permettent l'injection des `Rule` JUnit 4.
+En utilisant les annotations `BeforeClass` et `AfterClass`, vous pouvez lancer et arrêter votre container pour les tests.
+
+Pour fonctionner, votre container doit exposer le port 3306 et doit également indiquer à `Testcontainers` à quel moment le container [est prêt à être utilisé](https://www.testcontainers.org/features/startup_and_waits/).
+
+Vous devez utiliser l'objet `GenericContainer` pour créer votre container en lui indiquant l'image à utiliser.
+
+<details>
+<summary>Afficher la réponse</summary>
+
+```java
+    private static GenericContainer container;
+
+    @BeforeClass
+    public static void setUp() {
+        container = new GenericContainer("mysql:petclinic")
+            .withExposedPorts(3306)
+            .waitingFor(Wait.forListeningPort());
+
+        container.setPortBindings(Lists.newArrayList("3306:3306"));
+        container.start();
+    }
+
+    @AfterClass
+    public static void tearDown() {
+        container.stop();
+    }
+```
+
+</details>
+
+
+JUnit propose également les annotations `@Rule` et `@ClassRule`. Ces annotations permettent l'injection des `Rule` JUnit 4.
 
 Ce sont des composants qui interceptent les appels aux méthodes de test et qui permettent de réaliser une opération avant et après l'exécution d'une méthode de test.
 
-Pour fonctionner, votre container doit exposer le port 3306 et doit également indiquer à `Testcontainers` à quel moment le container [est prêt à être utilisé](https://www.testcontainers.org/features/startup_and_waits/).
+Remplacer vos précédentes méthodes en utilisant les annotations JUnit.
 
 ::: tip
 Vous risquez de devoir faire appel à la méthode `withCreateContainerCmdModifier` qui permet de modifier les paramètres de création du container.
@@ -60,22 +91,6 @@ Vous risquez de devoir faire appel à la méthode `withCreateContainerCmdModifie
 <summary>Afficher la réponse</summary>
 
 ```java
-@Rule
-public GenericContainer genericContainer = new GenericContainer("mysql:petclinic")
-    .withExposedPorts(3306)
-    .waitingFor(Wait.forListeningPort())
-    .withCreateContainerCmdModifier(
-        new Consumer<CreateContainerCmd>() {
-            @Override
-            public void accept(CreateContainerCmd createContainerCmd) {
-                createContainerCmd.withPortBindings(
-                    new PortBinding(Ports.Binding.bindPort(3306), new ExposedPort(3306))
-                );
-            }
-        });
-
-// -------------------------------- or -------------------------------- //
-
 @ClassRule
 public static GenericContainer genericContainer = new GenericContainer("mysql:petclinic")
     .withExposedPorts(3306)
@@ -124,15 +139,18 @@ Dans ce cas précis, c'est grâce aux annotations `@Rule` ou `@ClassRule` qu'est
 
 A ce stade du workshop les tests devraient se lancer correctement tout en utilisant une base de donnée Mysql instanciée dans docker.  
 Afin de pouvoir débugger il est souvent utile d'avoir accès aux logs du conteneur docker. Essayez de voir ce que propose Testcontainers
-afin de logger la sortie standard (`docker log <conteneurName>`) du conteneur dans la variable `LOGGER` de la classe de test.
+afin de logger la sortie standard (`docker log <conteneurName>`) du conteneur dans un Logger ou tout simplement dans la sortie standard.
 
 <details>
 <summary>Afficher la réponse</summary>
 
 ```java
-// print container log to LOGGER
+// Stream des logs avec un Logger
+genericContainer.followOutput(new Slf4jLogConsumer(logger));
+
+// print container log to System.out
 genericContainer.withLogConsumer(outputFrame ->
-    LOGGER.debug(((OutputFrame)outputFrame).getUtf8String())
+    System.out.println(((OutputFrame)outputFrame).getUtf8String())
 );
 ```
 </details>
