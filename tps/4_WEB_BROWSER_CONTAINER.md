@@ -50,7 +50,7 @@ Pour la suite, il est nécéssaire d'importer la dépendance suivante :
 <dependency>
     <groupId>org.testcontainers</groupId>
     <artifactId>selenium</artifactId>
-    <version>1.11.2</version>
+    <version>1.12.4</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -88,6 +88,8 @@ public void setUp() {
 public void should_find_jeff_black_owner() throws InterruptedException {
     // L'adresse IP peut être obtenue sous linux avec à partir de l'interface réseau docker0
     // Sous Mac et Windows, à partir de la version 18.03 de Docker, il est possible d'utiliser `host.docker.internal` 
+    // La méthode genericContainer.getTestHostIpAddress() ne fonctionne pour l'instant qu'avec une docker machine
+    // java.lang.UnsupportedOperationException: getTestHostIpAddress() is only implemented for docker-machine right now
     webDriver.get("http://" + dockerIp + ":8080/");
     webDriver.findElement(By.cssSelector("[title*='find owners']")).click();
     

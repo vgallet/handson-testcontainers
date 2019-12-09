@@ -168,7 +168,7 @@ Dans le cas où vos tests fonctionnent avec JUnit 5, vous devrez importer la dé
 <dependency>
     <groupId>org.testcontainers</groupId>
     <artifactId>junit-jupiter</artifactId>
-    <version>1.11.2</version>
+    <version>1.12.4</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -283,7 +283,7 @@ public abstract class AbstractRepositoryTests {}
 <dependency>
     <groupId>org.testcontainers</groupId>
     <artifactId>mysql</artifactId>
-    <version>1.11.2</version>
+    <version>1.12.4</version>
     <scope>test</scope>
 </dependency>
 ```
