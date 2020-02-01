@@ -111,7 +111,7 @@ Si vous souhaitez modifier la résolution de la capture d'écran, se conférer a
 <summary>Afficher la réponse</summary>
 
 ```java
-// into AbstractIntegrationTest
+
 Map<String, String> envs = new HashMap<>();
 envs.put("SCREEN_WIDTH", "1366");
 envs.put("SCREEN_HEIGHT", "768");
@@ -123,7 +123,6 @@ genericContainer = (BrowserWebDriverContainer) new BrowserWebDriverContainer()
 genericContainer.start();
 
 
-// into OwnersPageIHMTest.java
 @Test
 public void take_screenshot_jeff_black_owner() throws InterruptedException, IOException {
     webDriver.get("http://" + dockerIpv4 + ":8080/");

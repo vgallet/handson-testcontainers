@@ -108,6 +108,15 @@ public static GenericContainer genericContainer = new GenericContainer("mysql:pe
 </details>
 
 <br/>
+
+:::warning
+
+ /!\ Dans le cadre de cet atelier, nous vous montrons comment spécifier et donc figer les ports exposés par le container. Cela peut être utile dans certains cas mais en réalité, il s'agit d'une mauvaise pratique.
+ 
+ Comme expliqué dans [cet article](https://bsideup.github.io/posts/testcontainers_fixed_ports/) d'un des créateurs de Testcontainers, 
+ cela peut provoqué des soucis d'allocation de port sur un ordinateur ou une plateforme de CI et cela peut empêcher de lancer les tests en parallèle.
+:::
+
 <br/>
 
 ### Cycle de vie du container ?
@@ -260,6 +269,12 @@ spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDri
 Afin d'utiliser ce driver il faut aussi ajouter la dépendance testcontainers correspondant à une base de donnée mysql. 
 Dépendance que vous pourrez trouver sur [maven repository](https://mvnrepository.com/artifact/org.testcontainers)
 
+:::tip
+
+À l'heure actuelle, le driver `ContainerDatabaseDriver` ne supporte que les bases de données de type MySQL, PostgreSQL et Oracle. 
+
+:::
+
 <details>
 <summary>Afficher la réponse</summary>
 
@@ -289,8 +304,73 @@ public abstract class AbstractRepositoryTests {}
 ```
 </details>
 
-:::tip
+L'URL de connexion à la base de données ne contient pas de port, quel est le port réellement exposé par le container ?
 
-À l'heure actuelle, le driver `ContainerDatabaseDriver` ne supporte que les bases de données de type MySQL, PostgreSQL et Oracle. 
+<details>
+<summary>Afficher la réponse</summary>
+
+Lorsque le port n'est pas fixé par le programme, Testcontainers va choisir un port libre au hasard pour réaliser le binding de ports. Il est possible de récupérer le port mappé une fois le container démarré :
+
+```java
+    container.getMappedPort(3306);
+```
+</details>
+
+
+## Optimisation
+
+Lors du build de l'application, les tests d'intégrations peuvent prendre un certain temps à se lancer et à s'exécuter. Il est parfois important d'optimiser le temps d'exécution.
+
+### Vérification système
+
+Avant de lancer un container, Testcontainers réalise des vérifications système tel que : la version de Docker utilisée, l'espace disque libre, la disponibilité des ports exposés, etc ...
+
+On peut voir ces contrôles dans les logs de démarrage :
+
+```
+INFO 11070 --- [main] org.testcontainers.DockerClientFactory   : Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+        ℹ︎ Checking the system...
+        ✔ Docker version should be at least 1.6.0
+        ✔ Docker environment should have more than 2GB free disk space
+```
+
+Une fois que l'on s'est assuré que l'on peut correctement lancer des containers à l'aide de Testcontainers, il n'est plus nécessaire de réaliser ces contrôles et l'on peut gagner quelques secondes sur le temps de démarrage des tests.
+
+Pour ce faire, éditez le fichier `$HOME/.testcontainers.properties` pour y ajouter 
+
+```
+checks.disable=true
+```
+
+### Réutilisation des containers
+
+[Un travail est en cours](https://github.com/testcontainers/testcontainers-java/pull/1781) par les contributeurs du projet Testcontainers pour permettre de réutiliser un container mis en place lors d'un test.
+
+Pour pouvoir tester cette nouvelle fonctionnalité, il est nécessaire d'éditer le fichier `$HOME/.testcontainers.properties` en ajoutant :
+
+```
+testcontainers.reuse.enable=true
+```
+
+Enfin, il faut indiquer au driver `ContainerDatabaseDriver` de réutiliser le container créée avec l'option `TC_REUSABLE` :
+
+```
+
+jdbc:tc:mysql:petclinic://localhost/petclinic?TC_REUSABLE=true
+
+```
+
+Lancez à deux reprises les tests, que constatez-vous ? 
+
+<details>
+<summary>Afficher la réponse</summary>
+
+Le container n'est ni stoppé ni supprimé. Il n'y a pour l'instant aucune politique de nettoyage ni de TTL. C'est donc à la charge de l'utilisateur d'effectuer le nettoyage sur son ordinateur ou la plateforme de CI.
+
+</details>
+
+:::warning
+
+Attention, malgré la présence de cette fonctionnalité au sein de la librairie, elle n'est pour le moment qu'au stade "expérimentale" et est à utiliser en connaissance de cause.
 
 :::
