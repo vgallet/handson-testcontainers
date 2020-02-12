@@ -1,4 +1,4 @@
-# Dockerisez vos tests d'intégrations [![Deploy Status](https://travis-ci.org/RouxAntoine/handson-testcontainers.svg?branch=master)]
+# Dockerisez vos tests d'intégrations [![Deploy Status](https://api.travis-ci.org/vgallet/handson-testcontainers.svg?branch=master)](https://travis-ci.org/vgallet/handson-testcontainers)
 
 Lien vers les slides [https://zenika.github.io/handson-testcontainers/](https://zenika.github.io/handson-testcontainers/)
 
