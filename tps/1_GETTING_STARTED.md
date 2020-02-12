@@ -1,6 +1,6 @@
 # Getting Started
 
-Dans cet atelier, vous allez mettre en place [Testcontainers]() pour migrer les tests d'intégrations d'une application [Spring Boot](https://spring.io/projects/spring-boot).
+Dans cet atelier, vous allez mettre en place [Testcontainers](https://www.testcontainers.org/) pour migrer les tests d'intégrations d'une application [Spring Boot](https://spring.io/projects/spring-boot).
 
 Il s'agit de l'application [Spring Petclinic](https://github.com/spring-projects/spring-petclinic), une application de démonstration utilisée pour montrer des cas d'exemples de certains composants de l'écosystème Spring.
 On y trouve par exemple [Spring Boot Actuator](https://www.baeldung.com/spring-boot-actuators), [Spring Data JPA](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/), [Spring Web](https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html) et [Spring Cache](https://spring.io/guides/gs/caching/).

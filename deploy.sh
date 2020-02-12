@@ -31,22 +31,19 @@ updateLocal()
 setGitCredential()
 {
     cd public/
-    if [ ! "q$GITHUB_TOKEN" = "q" ] && [ ! "q$GITHUB_USER" = "q" ];
+    if [ -n "$GITHUB_TOKEN" ] && [ -n "$GITHUB_USER" ];
     then
         git remote set-url origin https://$GITHUB_USER:$GITHUB_TOKEN@github.com/Zenika/handson-testcontainers.git
-    fi
 
-    cd ../
-    if [ -n $GITHUB_TOKEN ] && [ -n $GITHUB_USER ];
-    then
-        git remote set-url origin https://$GITHUB_USER:$GITHUB_TOKEN@github.com/$GITHUB_USER/handson-testcontainers.git
+        cd ../
+        git remote set-url origin https://$GITHUB_USER:$GITHUB_TOKEN@github.com/vgallet/handson-testcontainers.git
     fi
 }
 
 set -e         # -x print all command (to debug), -e exit at any command failure
 
-$(setGitCredential)
-$(updateLocal > /dev/null)
+setGitCredential
+updateLocal
 
 if [ ! -d "./node_modules" ]; then
     npm install --bin-links
