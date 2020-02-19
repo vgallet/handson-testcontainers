@@ -91,6 +91,8 @@ Vous risquez de devoir faire appel à la méthode `withCreateContainerCmdModifie
 <summary>Afficher la réponse</summary>
 
 ```java
+
+// ancienne méthode (CreateContainerCmd.withPortBindings()) deprecated
 @ClassRule
 public static GenericContainer genericContainer = new GenericContainer("mysql:petclinic")
     .withExposedPorts(3306)
@@ -104,6 +106,20 @@ public static GenericContainer genericContainer = new GenericContainer("mysql:pe
                 );
             }
         });
+
+// nouvelle méthode (HostConfig.withPortBindings())
+@ClassRule
+public static GenericContainer container = new GenericContainer<>("mysql:petclinic")
+    .withExposedPorts(3306)
+    .withLogConsumer(outputFrame -> System.out.println(outputFrame.getUtf8String()))
+    .waitingFor(Wait.forListeningPort())
+    .withCreateContainerCmdModifier(createContainerCmd -> 
+            createContainerCmd.withHostConfig(
+                HostConfig.newHostConfig().withPortBindings(new PortBinding(
+                    Ports.Binding.bindPort(3306), new ExposedPort(3306)
+                ))
+            )
+    );
 ```
 </details>
 
@@ -185,23 +201,54 @@ Dans le cas où vos tests fonctionnent avec JUnit 5, vous devrez importer la dé
 pour pouvoir utiliser [les extensions Testcontainers](https://www.testcontainers.org/test_framework_integration/junit_5/).
 
 ```java
+// Attention ici l'import correspond à l'annotation junit5 et non plus junit4
+import org.junit.jupiter.api.Test;
+
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.HostConfig;
+import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.api.model.Ports;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.stereotype.Repository;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@DataJpaTest(
+    properties = {
+        "spring.datasource.url=jdbc:mysql://localhost/petclinic",
+        "spring.datasource.username=petclinic",
+        "spring.datasource.password=petclinic",
+        "spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect"
+    },
+    includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = Repository.class)
+)
 @Testcontainers
 class MyTestcontainersTests {
 
-     // will be shared between test methods
+    // will be shared between test methods
     @Container
-    private static final MySQLContainer MY_SQL_CONTAINER = new MySQLContainer();
+    private static final GenericContainer container = new GenericContainer<>("mysql:petclinic")
+        .withExposedPorts(3306)
+        .withLogConsumer(outputFrame -> System.out.println(outputFrame.getUtf8String()))
+        .waitingFor(Wait.forListeningPort())
+        .withCreateContainerCmdModifier(createContainerCmd ->
+            createContainerCmd.withHostConfig(
+                HostConfig.newHostConfig().withPortBindings(new PortBinding(
+                    Ports.Binding.bindPort(3306), new ExposedPort(3306)
+                ))
+            )
+        );
 
-     // will be started before and stopped after each test method
-    @Container
-    private PostgreSQLContainer postgresqlContainer = new PostgreSQLContainer()
-            .withDatabaseName("foo")
-            .withUsername("foo")
-            .withPassword("secret");
     @Test
     void test() {
-        assertTrue(MY_SQL_CONTAINER.isRunning());
-        assertTrue(postgresqlContainer.isRunning());
+        assertTrue(container.isRunning());
     }
 }
 ```
