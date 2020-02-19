@@ -193,7 +193,7 @@ Dans le cas où vos tests fonctionnent avec JUnit 5, vous devrez importer la dé
 <dependency>
     <groupId>org.testcontainers</groupId>
     <artifactId>junit-jupiter</artifactId>
-    <version>1.12.4</version>
+    <version>1.12.5</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -345,24 +345,28 @@ public abstract class AbstractRepositoryTests {}
 <dependency>
     <groupId>org.testcontainers</groupId>
     <artifactId>mysql</artifactId>
-    <version>1.12.4</version>
+    <version>1.12.5</version>
     <scope>test</scope>
 </dependency>
 ```
 </details>
 
-L'URL de connexion à la base de données ne contient pas de port, quel est le port réellement exposé par le container ?
 
-<details>
-<summary>Afficher la réponse</summary>
+:::tip
 
-Lorsque le port n'est pas fixé par le programme, Testcontainers va choisir un port libre au hasard pour réaliser le binding de ports. Il est possible de récupérer le port mappé une fois le container démarré :
+A tout moment lorsque le port n'est pas fixé par le programme, Testcontainers va choisir un port libre au hasard pour réaliser le binding de ports. Il est possible de récupérer le port mappé une fois le container démarré :
 
 ```java
-    container.getMappedPort(3306);
-```
-</details>
 
+    @Container
+    private static final GenericContainer container = new GenericContainer<>("mysql:petclinic");
+    
+    public static void setup() {
+        container.getMappedPort(3306);
+        ...
+    }
+```
+:::
 
 ## Optimisation
 
@@ -383,7 +387,7 @@ INFO 11070 --- [main] org.testcontainers.DockerClientFactory   : Ryuk started - 
 
 Une fois que l'on s'est assuré que l'on peut correctement lancer des containers à l'aide de Testcontainers, il n'est plus nécessaire de réaliser ces contrôles et l'on peut gagner quelques secondes sur le temps de démarrage des tests.
 
-Pour ce faire, éditez le fichier `$HOME/.testcontainers.properties` pour y ajouter 
+Pour ce faire, éditez le fichier `$HOME/.testcontainers.properties` ou `testcontainers.properties` dans le classpath pour y ajouter :
 
 ```
 checks.disable=true
@@ -393,7 +397,7 @@ checks.disable=true
 
 [Un travail est en cours](https://github.com/testcontainers/testcontainers-java/pull/1781) par les contributeurs du projet Testcontainers pour permettre de réutiliser un container mis en place lors d'un test.
 
-Pour pouvoir tester cette nouvelle fonctionnalité, il est nécessaire d'éditer le fichier `$HOME/.testcontainers.properties` en ajoutant :
+Pour pouvoir tester cette nouvelle fonctionnalité, il est nécessaire d'éditer le fichier `$HOME/.testcontainers.properties` ou `testcontainers.properties` dans le classpath en ajoutant :
 
 ```
 testcontainers.reuse.enable=true

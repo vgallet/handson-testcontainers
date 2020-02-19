@@ -50,7 +50,7 @@ Pour la suite, il est nécéssaire d'importer la dépendance suivante :
 <dependency>
     <groupId>org.testcontainers</groupId>
     <artifactId>selenium</artifactId>
-    <version>1.12.4</version>
+    <version>1.12.5</version>
     <scope>test</scope>
 </dependency>
 ```

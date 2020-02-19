@@ -58,7 +58,7 @@ Puis dans un second temps afin de prévoir l'interopérabilité avec Testcontain
 <dependency>
     <groupId>org.testcontainers</groupId>
     <artifactId>testcontainers</artifactId>
-    <version>1.12.4</version>
+    <version>1.12.5</version>
     <scope>test</scope>
 </dependency>
 ```
