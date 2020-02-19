@@ -17,6 +17,10 @@ Pour bien démarrer, assurez-vous d'avoir les outils suivant d'installés :
 - Votre IDE préféré
 
 
+::: tip
+ Pensez à vérifier que votre utilisateur courant appartient au group `docker`
+:::
+
 Ensuite téléchargez le projet depuis github :
 
 ```bash

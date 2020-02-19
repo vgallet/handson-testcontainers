@@ -4,7 +4,7 @@ Une fois la base de données en mémoire désactivée, il faut maintenant créer
 
 Afin de correspondre aux besoins de l'application, nous allons créer une image Docker dédiée pour les tests.
 
-Dans le répertoire `src/test/resources/mysql` vous trouverez le fichier `Dockerfile`. Ce fichier doit être complété pour ajouter :
+Dans le répertoire `src/test/resources` vous trouverez le fichier `Dockerfile`. Ce fichier doit être complété pour ajouter :
  - les variables d'environnement `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD`,
  - les ressources `a_schema.sql`, `b_data.sql` dans le répertoire `/docker-entrypoint-initdb.d`.
 
@@ -40,6 +40,10 @@ docker run -p 3306:3306 mysql:petclinic
 </details>
 
 <br/>
+
+Pour éviter les conflits de port entre ce container et le container lancé par testcontainers pensez à le couper avant le lancement de vos tests.
+Avec la commande `docker stop $(docker ps -a -q  --filter ancestor=mysql:petclinic)`
+
 <br/>
 
 ## Intégration dans les tests
